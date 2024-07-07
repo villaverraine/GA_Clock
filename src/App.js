@@ -1,24 +1,33 @@
 import logo from './logo.svg';
 import './App.css';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import { SnackbarProvider } from 'notistack';
+import { UserProvider } from './components/UserContext';
+
+
+import Login from './pages/Login';
+
+
+const router = createBrowserRouter ([
+  {
+    path: "/",
+    element: <Login/>,
+  },
+]);
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <UserProvider>
+      <SnackbarProvider maxSnack={5}>
+      <div className='App'>
+        <RouterProvider router={router}/>
+      </div>
+      </SnackbarProvider>  
+    </UserProvider>
   );
 }
 
