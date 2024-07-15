@@ -1,0 +1,49 @@
+import React from 'react';
+import { styled } from '@mui/material/styles';
+
+const PageContainer = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100vh', // Full viewport height
+});
+
+const Header = styled('div')({
+  height: '60px', // Fixed height for header
+  backgroundColor: '#FF6347', // Tomato color
+  color: '#FFF',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: '24px',
+  fontWeight: 'bold',
+});
+
+const MainContent = styled('div')({
+  display: 'flex',
+  flex: 1, // Takes the remaining space
+  overflow: 'auto', // Handle content overflow
+});
+
+const LeftSide = styled('div')({
+  width: '60%', // 60% of the width
+  backgroundColor: '#87CEEB', // SkyBlue color
+});
+
+const RightSide = styled('div')({
+  width: '40%', // 40% of the width
+  backgroundColor: '#32CD32', // LimeGreen color
+});
+
+function DashboardPage() {
+  return (
+    <PageContainer>
+      <Header>Header Section</Header>
+      <MainContent>
+        <LeftSide>Left Side Content</LeftSide>
+        <RightSide>Right Side Content</RightSide>
+      </MainContent>
+    </PageContainer>
+  );
+}
+
+export default DashboardPage;
