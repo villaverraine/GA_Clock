@@ -16,7 +16,7 @@ const PageContainer = styled('div')({
     backgroundColor: '#F3F3F3', // Background color for the whole page
 });
 
-const LoginDiv = styled('div')({
+const SignUpDiv = styled('div')({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -24,6 +24,8 @@ const LoginDiv = styled('div')({
     backgroundColor: '#FDFDFD', // Background color for the login div
     borderRadius: '10px',
     padding: '8vh',
+    width: '100%', // Ensure full width is used
+    maxWidth: '454px', // Maximum width to keep the form from stretching too wide
 });
 
 const Logo = styled('div')({
@@ -46,14 +48,32 @@ const ButtonContainer = styled('div')({
 const schema = {
     type: "object",
     properties: {
+        firstName: { 
+            type: 'string',
+            title: "First Name"
+        },
+        lastName: { 
+            type: 'string',
+            title: "Last Name"
+        },
         username: { 
             type: 'string',
             title: "Username"
         },
+        email: { 
+            type: 'string',
+            format: 'email',
+            title: "Email Address"
+        },
         password: { 
             type: 'string',
             format: 'password',
-            title: "Password" 
+            title: "Password"
+        },
+        confirmPassword: { 
+            type: 'string',
+            format: 'password',
+            title: "Confirm Password"
         },
     },
 };
@@ -63,9 +83,30 @@ const uischema = {
     elements: [
         {
             type: "Control",
+            scope: "#/properties/firstName",
+            options: {
+                label: 'First Name'
+            }
+        },
+        {
+            type: "Control",
+            scope: "#/properties/lastName",
+            options: {
+                label: 'Last Name'
+            }
+        },
+        {
+            type: "Control",
             scope: "#/properties/username",
             options: {
                 label: 'Username'
+            }
+        },
+        {
+            type: "Control",
+            scope: "#/properties/email",
+            options: {
+                label: 'Email Address'
             }
         },
         {
@@ -74,23 +115,26 @@ const uischema = {
             options: {
                 label: 'Password'
             }
+        },
+        {
+            type: "Control",
+            scope: "#/properties/confirmPassword",
+            options: {
+                label: 'Confirm Password'
+            }
         }
     ] 
 };
 
-function LoginForm() {
+function SignupForm() {
     const [ data, setData ] = React.useState({});
     const [ errors, setErrors ] = React.useState({});
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
     const { setUser } = useUser();
-    
-    const handleRegister = () => {
-        navigate('/signup');  
-    };
 
-    const handleForgot = () => {
-        navigate('/');  // change to forgot password page when coded
+    const handleAlreadyHave = () => {
+        navigate('/');  
     };
 
     const handleSubmit = async () => {
@@ -101,7 +145,7 @@ function LoginForm() {
         }
         
         try {
-            const response = await fetch('http://localhost:3001/api/login', {
+            const response = await fetch('http://localhost:3001/api/signup', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json' 
@@ -114,8 +158,8 @@ function LoginForm() {
             if(reply && reply.success){
                 setUser(reply.result);
                 console.log("Form Submitted");   
-                enqueueSnackbar("Login Successful!", {variant: 'success'});
-                navigate('/home');
+                enqueueSnackbar("Signup Successful!", {variant: 'success'});
+                navigate('/'); //Navigate back to login page
             } else {
                 enqueueSnackbar(reply.message, {variant: 'error'});
             }
@@ -129,7 +173,7 @@ function LoginForm() {
 
     return (
     <PageContainer>
-        <LoginDiv>
+        <SignUpDiv>
             <Logo />
             <JsonForms
                 schema = {schema}
@@ -141,14 +185,13 @@ function LoginForm() {
                     setErrors(errors);
                 }}
             />
-            <Button variant="contained" onClick={handleSubmit} style={{width: '100%', marginTop: '30px'}}>Login</Button>
+            <Button variant="contained" onClick={handleSubmit} style={{width: '100%', marginTop: '30px'}}>Sign Up</Button>
             <ButtonContainer>
-                <Button variant="text" onClick={handleForgot}>Forgot Password?</Button>
-                <Button variant="text" onClick={handleRegister}>Don't have an account? Sign Up.</Button>
+                <Button variant="text" onClick={handleAlreadyHave}>Already Have An Account? Log In.</Button>
             </ButtonContainer>
-        </LoginDiv>
+        </SignUpDiv>
     </PageContainer>
     );
 }
 
-export default LoginForm;
+export default SignupForm;
