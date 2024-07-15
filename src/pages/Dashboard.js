@@ -8,7 +8,7 @@ const PageContainer = styled('div')({
 });
 
 const Header = styled('div')({
-  height: '60px', // Fixed height for header
+  height: '10vh', // Fixed height for header
   backgroundColor: '#FF6347', // Tomato color
   color: '#FFF',
   display: 'flex',
@@ -25,13 +25,13 @@ const MainContent = styled('div')({
 });
 
 const LeftSide = styled('div')({
-  width: '60%', // 60% of the width
-  backgroundColor: '#87CEEB', // SkyBlue color
+  width: '50%', 
+  backgroundColor: '#87CEEB',
 });
 
 const RightSide = styled('div')({
-  width: '40%', // 40% of the width
-  backgroundColor: '#32CD32', // LimeGreen color
+  width: '50%', 
+  backgroundColor: '#32CD32', 
 });
 
 function DashboardPage() {
