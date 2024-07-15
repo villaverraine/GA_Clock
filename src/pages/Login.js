@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { JsonForms } from '@jsonforms/react';
 import { materialRenderers } from '@jsonforms/material-renderers';
 import Button from '@mui/material/Button';
@@ -7,16 +7,33 @@ import { useSnackbar } from 'notistack';
 import { useUser } from '../components/UserContext';
 import { styled } from '@mui/material/styles';
 
+const PageContainer = styled('div')({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh', // Full height of the viewport
+    width: '100vw', // Full width of the viewport
+    backgroundColor: '#F3F3F3', // Background color for the whole page
+});
+
 const LoginDiv = styled('div')({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
-    height: '60vh',
-    width: '30%',
-    margin: '20vh auto 0',
-    // backgroundColor: '#FAFAFA',
-    borderRadius: '10px'
+    backgroundColor: '#FDFDFD', // Background color for the login div
+    borderRadius: '10px',
+    padding: '8vh',
+});
+
+const Logo = styled('div')({
+    width: '100%',
+    height: '150px',
+    backgroundImage: 'url(/gallium31_logo.png)',
+    backgroundSize: 'contain',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+    marginBottom: '20px'
 });
 
 const ButtonContainer = styled('div')({
@@ -25,7 +42,6 @@ const ButtonContainer = styled('div')({
     width: '100%',
     marginTop: '5px'
 });
-
 
 const schema = {
     type: "object",
@@ -60,9 +76,7 @@ const uischema = {
             }
         }
     ] 
-}
-
-
+};
 
 function LoginForm() {
     const [ data, setData ] = React.useState({});
@@ -109,8 +123,9 @@ function LoginForm() {
     }; 
 
     return (
-    <div>
+    <PageContainer>
         <LoginDiv>
+            <Logo />
             <JsonForms
                 schema = {schema}
                 uischema = {uischema}
@@ -127,9 +142,8 @@ function LoginForm() {
                 <Button variant="text" onClick={handleRegister}>Don't have an account? Sign Up.</Button>
             </ButtonContainer>
         </LoginDiv>
-    </div>
+    </PageContainer>
     );
-    
 }
 
 export default LoginForm;
