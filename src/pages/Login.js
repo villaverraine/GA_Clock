@@ -94,6 +94,9 @@ function LoginForm() {
     };
 
     const handleSubmit = async () => {
+        //FOR TESTING ONLY
+        navigate('/dashboard')
+        /////////////////////
         if(errors && errors.length > 0) {
             for(let i = 0; i < errors.length; i++){
                 enqueueSnackbar(errors[i]);
