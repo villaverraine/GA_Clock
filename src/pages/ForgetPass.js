@@ -16,7 +16,17 @@ const PageContainer = styled('div')({
     backgroundColor: '#F3F3F3', // Background color for the whole page
 });
 
-const LoginDiv = styled('div')({
+const TextBody = styled('div')({
+    backgroundColor: '#FDFDFD', 
+    borderRadius: '10px',
+    marginTop: '100px',
+    marginBottom: '40px',
+    fontSize: 20,
+    width: '500px',
+    textAlign: 'left'
+});
+
+const ForgetDiv = styled('div')({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -24,6 +34,7 @@ const LoginDiv = styled('div')({
     backgroundColor: '#FDFDFD', // Background color for the login div
     borderRadius: '10px',
     padding: '8vh',
+    width: '500px'
 });
 
 const Logo = styled('div')({
@@ -46,14 +57,10 @@ const ButtonContainer = styled('div')({
 const schema = {
     type: "object",
     properties: {
-        username: { 
+        emailAddress: { 
             type: 'string',
-            title: "Username"
-        },
-        password: { 
-            type: 'string',
-            format: 'password',
-            title: "Password" 
+            format: 'email',
+            title: 'Email Address' 
         },
     },
 };
@@ -63,40 +70,26 @@ const uischema = {
     elements: [
         {
             type: "Control",
-            scope: "#/properties/username",
+            scope: "#/properties/emailAddress",
             options: {
-                label: 'Username'
-            }
-        },
-        {
-            type: "Control",
-            scope: "#/properties/password",
-            options: {
-                label: 'Password'
+                label: 'Email Address'
             }
         }
     ] 
 };
 
-function LoginForm() {
+function ForgetForm() {
     const [ data, setData ] = React.useState({});
     const [ errors, setErrors ] = React.useState({});
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
     const { setUser } = useUser();
-    
-    const handleRegister = () => {
-        navigate('/signup');  
-    };
 
-    const handleForget = () => {
-        navigate('/forget');  // change to forgot password page when coded
+    const handleBack = () => {
+        navigate('/');  
     };
 
     const handleSubmit = async () => {
-        //FOR TESTING ONLY
-        navigate('/dashboard')
-        /////////////////////
         if(errors && errors.length > 0) {
             for(let i = 0; i < errors.length; i++){
                 enqueueSnackbar(errors[i]);
@@ -132,8 +125,9 @@ function LoginForm() {
 
     return (
     <PageContainer>
-        <LoginDiv>
+        <ForgetDiv>
             <Logo />
+            <TextBody>Enter the email address associated with your account and we’ll send you a link to reset your password.</TextBody>
             <JsonForms
                 schema = {schema}
                 uischema = {uischema}
@@ -144,14 +138,13 @@ function LoginForm() {
                     setErrors(errors);
                 }}
             />
-            <Button variant="contained" onClick={handleSubmit} style={{width: '100%', marginTop: '30px'}}>Login</Button>
+            <Button variant="contained" onClick={handleSubmit} style={{width: '100%', marginTop: '30px'}}>Continue</Button>
             <ButtonContainer>
-                <Button variant="text" onClick={handleForget}>Forgot Password?</Button>
-                <Button variant="text" onClick={handleRegister}>Don't have an account? Sign Up.</Button>
+                <Button variant="text" onClick={handleBack}>Back</Button>
             </ButtonContainer>
-        </LoginDiv>
+        </ForgetDiv>
     </PageContainer>
     );
 }
 
-export default LoginForm;
+export default ForgetForm;
