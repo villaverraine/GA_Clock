@@ -24,7 +24,8 @@ const LoginDiv = styled('div')({
     backgroundColor: '#FDFDFD', // Background color for the login div
     borderRadius: '10px',
     padding: '8vh',
-    width: '34vw'
+    width: '60vw',
+    maxWidth: '454px',
 });
 
 const Logo = styled('div')({

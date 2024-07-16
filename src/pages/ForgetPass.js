@@ -22,7 +22,8 @@ const TextBody = styled('div')({
     marginTop: '100px',
     marginBottom: '40px',
     fontSize: 20,
-    width: '34vw',
+    width: '60vw',
+    maxWidth: '454px',
     textAlign: 'left'
 });
 
@@ -34,7 +35,8 @@ const ForgetDiv = styled('div')({
     backgroundColor: '#FDFDFD', // Background color for the login div
     borderRadius: '10px',
     padding: '8vh',
-    width: '34vw'
+    width: '60vw',
+    maxWidth: '454px',
 });
 
 const Logo = styled('div')({
