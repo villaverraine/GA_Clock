@@ -1,30 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
+import Header from './Header';
 
 const PageContainer = styled('div')({
   display: 'flex',
   flexDirection: 'column',
   height: '100vh', // Full viewport height
-});
-
-const Header = styled('div')({
-  height: '10vh', // Fixed height for header
-  backgroundColor: '#F3F3F3',
-  color: '#FFF',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  paddingTop: '2vh',
-  paddingLeft: '2vh', // Padding for spacing on sides
-});
-
-const Logo = styled('div')({
-  width: '100%',
-  height: '80%',
-  backgroundImage: 'url(/gallium31_logo.png)',
-  backgroundSize: 'contain',
-  backgroundRepeat: 'no-repeat',
-  marginBottom: '2vh'
 });
 
 const MainContent = styled('div')({
@@ -230,9 +211,7 @@ function Clock() {
 function DashboardPage() {
   return (
     <PageContainer>
-      <Header>
-      <Logo />
-      </Header>
+      <Header />
       <MainContent>
         <LeftSide>
           <GreetingDiv>
