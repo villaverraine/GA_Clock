@@ -9,13 +9,22 @@ const PageContainer = styled('div')({
 
 const Header = styled('div')({
   height: '10vh', // Fixed height for header
-  backgroundColor: '#FF6347', // Tomato color
+  backgroundColor: '#F3F3F3',
   color: '#FFF',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center',
-  fontSize: '24px',
-  fontWeight: 'bold',
+  justifyContent: 'space-between',
+  paddingTop: '2vh',
+  paddingLeft: '2vh', // Padding for spacing on sides
+});
+
+const Logo = styled('div')({
+  width: '100%',
+  height: '80%',
+  backgroundImage: 'url(/gallium31_logo.png)',
+  backgroundSize: 'contain',
+  backgroundRepeat: 'no-repeat',
+  marginBottom: '2vh'
 });
 
 const MainContent = styled('div')({
@@ -26,28 +35,52 @@ const MainContent = styled('div')({
 
 const LeftSide = styled('div')({
   width: '50%', 
-  backgroundColor: '#87CEEB',
+  backgroundColor: '#F3F3F3', 
+  padding: '20px', // Ensure some padding inside the right side
+  boxSizing: 'border-box', // Include padding in width calculation
 });
 
-// const GreetingDiv = styled('div')({
+const GreetingDiv = styled('div')({
+  backgroundColor: '#FDFDFD', 
+  padding: '20px',
+  marginBottom: '20px',
+  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Drop shadow
+});
 
-// })
+const AnnouncementHeader = styled('div')({
+  fontSize: '18px',
+  fontWeight: 'bold',
+  marginBottom: '10px',
+  textAlign: 'left', // Align the text to the left
+});
 
-// const AnnouncementDiv = styled('div')({
-  
-// })
+const AnnouncementDiv = styled('div')({
+  backgroundColor: '#FDFDFD', 
+  padding: '20px',
+  marginBottom: '20px',
+  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Drop shadow
+});
 
-// const CalendarEventsDiv = styled('div')({
-  
-// })
+const CalendarDiv = styled('div')({
+  display: 'flex',
+  justifyContent: 'space-between',
+  gap: '20px', // Gap between left and right parts of the calendar
+  backgroundColor: '#FDFDFD', 
+  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Drop shadow
+});
 
-// const CalendarDiv = styled('div')({
-  
-// })
+const CalDiv = styled('div')({
+  width: '50%',
+  backgroundColor: '#FDFDFD', 
+  padding: '4vh',
+  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Drop shadow
+});
 
-// const EventDiv = styled('div')({
-  
-// })
+const EventDiv = styled('div')({
+  width: '50%',
+  backgroundColor: '#FDFDFD', 
+  padding: '20px',
+});
 
 const RightSide = styled('div')({
   width: '50%', 
@@ -66,27 +99,27 @@ const ClockDiv = styled('div')({
   alignItems: 'center',
   backgroundColor: '#FDFDFD', // Background color for the clock div
   borderRadius: '10px',
-  padding: '74px', // Set a fixed padding
-  maxWidth: '98%', // Max width to prevent overflow
+  padding: '28vh 24vw', // Set a fixed padding
+  maxWidth: '94%', // Max width to prevent overflow
   maxHeight: '100%', // Ensure the height does not overflow the parent div
   boxSizing: 'border-box', // Include padding and border in width calculation
   overflow: 'hidden', // Hide any overflowing content
 });
 
 const AmpmSpan = styled('span')({
-  fontSize: '4vw',
+  fontSize: '8vw',
   fontWeight: 'bold',
   whiteSpace: 'nowrap', // Prevent text from wrapping
 });
 
 const TimeDiv = styled('div')({
-  fontSize: '6vw',
+  fontSize: '10vw',
   fontWeight: 'lighter',
   whiteSpace: 'nowrap', // Prevent text from wrapping
 });
 
 const TimeStateDiv = styled('div')({
-  fontSize: '2vw',
+  fontSize: '2.4vw',
   fontWeight: 'lighter',
   marginTop: '2%', // Responsive margin
   whiteSpace: 'nowrap', // Prevent text from wrapping
@@ -95,42 +128,46 @@ const TimeStateDiv = styled('div')({
 const TimeInfoDiv = styled('div')({
   backgroundColor: '#00547D', // Updated color
   color: '#FFF',
-  borderRadius: '5px',
   padding: '10px',
   marginTop: '10px',
-  fontSize: '2vw',
+  fontSize: '2.4vw',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center', // Center items
   whiteSpace: 'nowrap', // Prevent text from wrapping
-  width: '100%', // Set width to 100% of parent container
-  boxSizing: 'border-box', // Include padding and border in width calculation
+  boxSizing: 'border-box',
+  width: '28vw',
+  borderTopLeftRadius: '10px',
+  borderTopRightRadius: '10px',
 });
 
 const InfoLabel = styled('div')({
-  fontWeight: 'bold',
+  fontWeight: 'lighter',
   marginBottom: '5px', // Space between label and value
 });
 
 const InfoValue = styled('div')({
   marginBottom: '10px', // Space between entries
+  fontWeight: 'bold',
 });
 
 const TimeOutDiv = styled('div')({
-backgroundColor: '#0185B2', // Updated color
+  backgroundColor: '#0185B2', // Updated color
   color: '#FFF',
-  borderRadius: '5px',
+  borderBottomLeftRadius: '10px',
+  borderBottomRightRadius: '10px',
   padding: '10px',
   marginTop: '10px',
-  fontSize: '2vw',
+  fontSize: '3vw',
+  fontWeight: 'lighter',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center', // Center items
   whiteSpace: 'nowrap', // Prevent text from wrapping
-  width: '100%', // Set width to 100% of parent container
+  width: '28vw',
   boxSizing: 'border-box', // Include padding and border in width calculation
-
 });
+
 
 function Clock() {
   const [time, setTime] = useState(new Date());
@@ -175,17 +212,17 @@ function Clock() {
       <AmpmSpan>{ampm}</AmpmSpan>
       <TimeDiv>{currentTime}</TimeDiv>
       <TimeStateDiv>{isWorking}</TimeStateDiv>
-      <TimeInfoDiv>
-        <InfoLabel>
-          Start Time{String.fromCharCode(160, 160)}End Time
-        </InfoLabel>
-        <InfoValue>
-          {startTime}{String.fromCharCode(160, 160)}{endTime}
-        </InfoValue>
-      </TimeInfoDiv>
-      <TimeOutDiv>
-        Time OUT
-      </TimeOutDiv>
+        <TimeInfoDiv>
+          <InfoLabel>
+            Start Time{String.fromCharCode(160, 160)}End Time
+          </InfoLabel>
+          <InfoValue>
+            {startTime}{String.fromCharCode(160, 160)}{endTime}
+          </InfoValue>
+        </TimeInfoDiv>
+        <TimeOutDiv>
+          Time OUT
+        </TimeOutDiv>
     </ClockDiv>
   );
 }
@@ -193,10 +230,28 @@ function Clock() {
 function DashboardPage() {
   return (
     <PageContainer>
-      <Header>Header Section</Header>
+      <Header>
+      <Logo />
+      </Header>
       <MainContent>
         <LeftSide>
-          {/* Left side content */}
+          <GreetingDiv>
+            WELCOME USERNAME!
+          </GreetingDiv>
+          <AnnouncementHeader>
+            ANNOUNCEMENTS
+          </AnnouncementHeader>
+          <AnnouncementDiv>
+            Announcement Section
+          </AnnouncementDiv>
+          <CalendarDiv>
+            <CalDiv>
+              Calendar
+            </CalDiv>
+            <EventDiv>
+              Upcoming Events
+            </EventDiv>
+          </CalendarDiv>
         </LeftSide>
         <RightSide>
           <Clock />
