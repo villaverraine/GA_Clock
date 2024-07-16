@@ -24,8 +24,7 @@ const SignUpDiv = styled('div')({
     backgroundColor: '#FDFDFD', // Background color for the login div
     borderRadius: '10px',
     padding: '8vh',
-    width: '100%', // Ensure full width is used
-    maxWidth: '454px', // Maximum width to keep the form from stretching too wide
+    width: '34vw'
 });
 
 const Logo = styled('div')({
