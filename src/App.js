@@ -10,6 +10,7 @@ import { UserProvider } from './components/UserContext';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
+import ForgetPass from './pages/ForgetPass';
 
 const router = createBrowserRouter ([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter ([
   {
     path: "/dashboard",
     element: <Dashboard/>,
+  },
+  {
+    path: "/forget",
+    element: <ForgetPass/>,
   },
 ]);
 
