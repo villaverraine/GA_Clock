@@ -85,6 +85,79 @@ async function startApp() {
       }
     })
 
+    app.post('/api/create/:modelName', verifyToken, async (req, res) => {
+      const { modelName } = req.params;
+      const document = req.body;
+  
+      try {
+        const result = await db.collection(modelName).insertOne(document);
+        res.json({ success: true, message: "success create", result: result });
+      } catch (error) {
+        console.error(error);
+        res.json({ success: false, message: "create error" });
+      }
+    });
+
+    app.post('/api/update/:modelName/:id', verifyToken, async (req, res) => {
+      const { modelName, id } = req.params;
+      let updates = req.body;
+  
+      if (!ObjectId.isValid(id)) {
+        return res.status(400).send('Invalid ID format');
+      }
+  
+      try {
+        delete updates._id;
+        const result = await db.collection(modelName).updateOne(
+          { _id: new ObjectId(id) },
+          { $set: updates }
+        );
+  
+        if (result.matchedCount === 0) {
+          return res.status(404).send('Document not found');
+        }
+  
+        res.json({ success: true, message: "success update", result: result });
+      } catch (error) {
+        console.error(error);
+        res.json({ success: false, message: "update error", error: error.message });
+      }
+    });
+
+    app.post('/api/search/:modelName', verifyToken, async (req, res) => {
+      const { modelName } = req.params;
+  
+      try {
+        const searchResult = await db.collection(modelName).find(req.body).toArray();
+  
+        res.json({ success: true, message: "success search", result: searchResult });
+      } catch (error) {
+        console.error(error);
+        res.json({ success: false, message: "search error" });
+      }
+    });
+
+    app.post('/api/delete/:modelName/:id', verifyToken, async (req, res) => {
+      const { modelName, id } = req.params;
+  
+      if (!ObjectId.isValid(id)) {
+        return res.status(400).send('Invalid ID format');
+      }
+  
+      try {
+        const result = await db.collection(modelName).deleteOne({ _id: new ObjectId(id) });
+  
+        if (result.deletedCount === 0) {
+          return res.status(404).send('Document not found or already deleted');
+        }
+  
+        res.json({ success: true, message: "Document deleted successfully", result: result });
+      } catch (error) {
+        console.error(error);
+        res.json({ success: false, message: "Delete Failed", error: error.message });
+      }
+    });
+
     app.get('/api/status', async (req, res) => {
       res.json({status: "Server is up and running."});
     });
