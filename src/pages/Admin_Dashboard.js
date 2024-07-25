@@ -4,6 +4,7 @@ import Header from './Header';
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css';
 import '../styles/CalendarStyles.css';
+import { useSnackbar } from 'notistack';
 
 
 const PageContainer = styled('div')({
@@ -113,37 +114,60 @@ const AdminCalendar = () => {
 
 
 const EmployeeTable = () => {
-      return(
-        //  <EmployeeList>
-          <Table>
-            <TableHead>
-                <TableRow>
-                    <TableHeaderCell colspan="2">Employees</TableHeaderCell>
-                </TableRow>
-                <TableRow>
-                    <TableHeaderCell>ID No.</TableHeaderCell>
-                    <TableHeaderCell>Name</TableHeaderCell>
-                </TableRow>
-            </TableHead>
-            <tbody>
-              {/* implement back-end here */}
-                <TableRow>
-                    <TableCell>Employee 1</TableCell>
-                    <TableCell>John Doe</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell>Employee 2</TableCell>
-                    <TableCell>Jane Smith</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell>Employee 3</TableCell>
-                    <TableCell>Young Hee</TableCell>
-                </TableRow>
-              {/* end back-end here */}
-            </tbody>
-          </Table>
-        //  </EmployeeList>
-    );
+  const [employees, setEmployees] = useState([]);
+  const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/search/employees', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        });
+
+        const data = await response.data;
+
+        if (data && data.success) {
+          setEmployees(data.result);
+          enqueueSnackbar('Employees loaded succesfully!', { variant: 'success' });
+        } else {
+          enqueueSnackbar(data.message, { variant: 'error' });
+        }
+      } catch (error) {
+        console.error('Failed to fetch employees: ', error);
+        enqueueSnackbar('Failed to fetch employees: ' + error.message, { variant: 'error' });
+      }
+    };
+
+    fetchEmployees();
+  }, [enqueueSnackbar]);
+  return(
+    //  <EmployeeList>
+    <Table>
+      <TableHead>
+          <TableRow>
+              <TableHeaderCell colspan="2">Employees</TableHeaderCell>
+          </TableRow>
+          <TableRow>
+              <TableHeaderCell>ID No.</TableHeaderCell>
+              <TableHeaderCell>Name</TableHeaderCell>
+          </TableRow>
+      </TableHead>
+      <tbody>
+        {/* implement back-end here */}
+        {employees.map((employee, index) => (
+          <TableRow key={index}>
+            <TableCell>{employee._id}</TableCell>
+            <TableCell>{employee.name}</TableCell>
+          </TableRow>
+        ))}
+        {/* end back-end here */}
+      </tbody>
+    </Table>
+  //  </EmployeeList>
+  );
 };
 
 const GreetingComponent = () => {

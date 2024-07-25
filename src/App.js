@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import ForgetPass from './pages/ForgetPass';
+import AdminDashboardPage from './pages/Admin_Dashboard';
 
 const router = createBrowserRouter ([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter ([
     path: "/forget",
     element: <ForgetPass/>,
   },
+  {
+    path: "/admin",
+    element: <AdminDashboardPage/>
+  }
 ]);
 
 
