@@ -136,6 +136,17 @@ async function startApp() {
         res.json({ success: false, message: "search error" });
       }
     });
+  
+    app.get('/api/employees', async (req, res) => {
+      try {
+        const employees = await db.collection('employees').find({}).toArray();
+        res.json({ success: true, message: "Employees fetched successfully", result: employees });
+      } catch (error) {
+        console.error(error);
+        res.json({ success: false, message: "Error fetching employees" });
+      }
+    });
+
 
     app.post('/api/delete/:modelName/:id', verifyToken, async (req, res) => {
       const { modelName, id } = req.params;

@@ -113,36 +113,35 @@ const AdminCalendar = () => {
 };
 
 
-const EmployeeTable = () => {
+function EmployeeTable() {
   const [employees, setEmployees] = useState([]);
+  const [data, setData] = React.useState({});
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const response = await fetch('http://localhost:3001/api/search/employees', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        });
+    const fetchEmployees = async () => { 
+      const response = await fetch('http://localhost:3001/api/employees', {
+        method: 'GET',
+        headers: { 
+                'Content-Type': 'application/json' 
+            },
+        body: JSON.stringify(data)
+      });
 
-        const data = await response.data;
+      const reply = await response.json();
 
-        if (data && data.success) {
-          setEmployees(data.result);
-          enqueueSnackbar('Employees loaded succesfully!', { variant: 'success' });
-        } else {
-          enqueueSnackbar(data.message, { variant: 'error' });
-        }
-      } catch (error) {
-        console.error('Failed to fetch employees: ', error);
-        enqueueSnackbar('Failed to fetch employees: ' + error.message, { variant: 'error' });
+      if (reply && reply.success) {
+        setEmployees(reply.results);
+        console.log("Employees Loaded"); 
+        enqueueSnackbar("Employees Loaded Successfully!", {variant: 'success'});
+      } else {
+        enqueueSnackbar(reply.message, {variant: 'error'});
       }
     };
 
     fetchEmployees();
-  }, [enqueueSnackbar]);
+  }, []);
+
   return(
     //  <EmployeeList>
     <Table>
@@ -155,16 +154,14 @@ const EmployeeTable = () => {
               <TableHeaderCell>Name</TableHeaderCell>
           </TableRow>
       </TableHead>
-      <tbody>
-        {/* implement back-end here */}
+      {/* <tbody>
         {employees.map((employee, index) => (
           <TableRow key={index}>
             <TableCell>{employee._id}</TableCell>
             <TableCell>{employee.name}</TableCell>
           </TableRow>
         ))}
-        {/* end back-end here */}
-      </tbody>
+      </tbody> */}
     </Table>
   //  </EmployeeList>
   );
