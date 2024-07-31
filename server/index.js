@@ -139,13 +139,15 @@ async function startApp() {
   
     app.get('/api/employees', async (req, res) => {
       try {
-        const employees = await db.collection('employees').find({}).toArray();
+        const employees = await db.collection('users').find({}).toArray();
+        // console.log("Employees fetched from DB:", employees); // Debugging line
         res.json({ success: true, message: "Employees fetched successfully", result: employees });
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching employees:", error);
         res.json({ success: false, message: "Error fetching employees" });
       }
     });
+
 
 
     app.post('/api/delete/:modelName/:id', verifyToken, async (req, res) => {

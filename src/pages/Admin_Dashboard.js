@@ -114,57 +114,59 @@ const AdminCalendar = () => {
 
 
 function EmployeeTable() {
-  const [employees, setEmployees] = useState([]);
-  const [data, setData] = React.useState({});
+  const [employees, setEmployees] = useState([]); // Initialize with an empty array
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const fetchEmployees = async () => { 
-      const response = await fetch('http://localhost:3001/api/employees', {
-        method: 'GET',
-        headers: { 
-                'Content-Type': 'application/json' 
-            },
-      });
+      try {
+        const response = await fetch('http://localhost:3001/api/employees');
+        const reply = await response.json();
 
-      const reply = await response.json();
-
-      if (reply && reply.success) {
-        setEmployees(reply.results);
-        console.log("Employees Loaded"); 
-        enqueueSnackbar("Employees Loaded Successfully!", {variant: 'success'});
-      } else {
-        enqueueSnackbar(reply.message, {variant: 'error'});
+        if (reply && reply.success) {
+          console.log(reply.result)
+          setEmployees(reply.result); 
+          enqueueSnackbar("Employees Loaded Successfully!", { variant: 'success' });
+        } else {
+          enqueueSnackbar(reply.message || "Failed to fetch employees", { variant: 'error' });
+        }
+      } catch (error) {
+        enqueueSnackbar("API error: " + error.message, { variant: 'error' });
       }
     };
 
     fetchEmployees();
   }, []);
 
-  return(
-    //  <EmployeeList>
+  return (
     <Table>
       <TableHead>
-          <TableRow>
-              <TableHeaderCell colspan="2">Employees</TableHeaderCell>
-          </TableRow>
-          <TableRow>
-              <TableHeaderCell>ID No.</TableHeaderCell>
-              <TableHeaderCell>Name</TableHeaderCell>
-          </TableRow>
+        <TableRow>
+          <TableHeaderCell colSpan="2">Employees</TableHeaderCell>
+        </TableRow>
+        <TableRow>
+          <TableHeaderCell>ID No.</TableHeaderCell>
+          <TableHeaderCell>Name</TableHeaderCell>
+        </TableRow>
       </TableHead>
-      {/* <tbody>
-        {employees.map((employee, index) => (
-          <TableRow key={index}>
-            <TableCell>{employee._id}</TableCell>
-            <TableCell>{employee.name}</TableCell>
+      <tbody>
+        {employees.length > 0 ? (
+          employees.map((employee, index) => (
+            <TableRow key={index}>
+              <TableCell>{employee._id}</TableCell>
+              <TableCell>{employee.name}</TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan="2">No employees found.</TableCell>
           </TableRow>
-        ))}
-      </tbody> */}
+        )}
+      </tbody>
     </Table>
-  //  </EmployeeList>
   );
-};
+}
+
 
 const GreetingComponent = () => {
     //PLACEHOLDER IMPLEMENT ON BACKEND
