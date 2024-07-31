@@ -125,7 +125,6 @@ function EmployeeTable() {
         headers: { 
                 'Content-Type': 'application/json' 
             },
-        body: JSON.stringify(data)
       });
 
       const reply = await response.json();
