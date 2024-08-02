@@ -50,7 +50,7 @@ const schema = {
     properties: {
         username: { 
             type: 'string',
-            title: "Username"
+            title: "username"
         },
         password: { 
             type: 'string',
