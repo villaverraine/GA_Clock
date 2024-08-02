@@ -5,7 +5,7 @@ import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css';
 import '../styles/CalendarStyles.css';
 import { useSnackbar } from 'notistack';
-
+import { useUser } from '../components/UserContext'
 
 const PageContainer = styled('div')({
   display: 'flex',
@@ -117,6 +117,7 @@ function EmployeeTable() {
   const [employees, setEmployees] = useState([]); // Initialize with an empty array
   const { enqueueSnackbar } = useSnackbar();
   const [data, setData] = React.useState({});
+  const { user, setUser } = useUser();
 
   useEffect(() => {
     const fetchEmployees = async () => { 
@@ -125,7 +126,7 @@ function EmployeeTable() {
             method: 'POST',
             headers: { 
               'Content-Type': 'application/json',
-              'access_token': token
+              'access_token': user.token
             },
             body: JSON.stringify(data),
             
