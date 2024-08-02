@@ -96,9 +96,6 @@ function LoginForm() {
     };
 
     const handleSubmit = async () => {
-        //FOR TESTING ONLY
-        navigate('/dashboard')
-        /////////////////////
         if(errors && errors.length > 0) {
             for(let i = 0; i < errors.length; i++){
                 enqueueSnackbar(errors[i]);
@@ -120,7 +117,7 @@ function LoginForm() {
                 setUser(reply.result);
                 console.log("Form Submitted");   
                 enqueueSnackbar("Login Successful!", {variant: 'success'});
-                navigate('/home');
+                navigate('/dashboard');
             } else {
                 enqueueSnackbar(reply.message, {variant: 'error'});
             }
