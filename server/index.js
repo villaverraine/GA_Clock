@@ -137,7 +137,7 @@ async function startApp() {
       }
     });
   
-    app.get('/api/employees', async (req, res) => {
+    app.post('/api/employees', async (req, res) => {
       try {
         const employees = await db.collection('users').find({}).toArray();
         // console.log("Employees fetched from DB:", employees); // Debugging line

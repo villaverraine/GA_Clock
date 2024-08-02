@@ -120,7 +120,7 @@ function LoginForm() {
                 setUser(reply.result);
                 console.log("Form Submitted");   
                 enqueueSnackbar("Login Successful!", {variant: 'success'});
-                navigate('/home');
+                navigate('/dashboard');
             } else {
                 enqueueSnackbar(reply.message, {variant: 'error'});
             }

@@ -116,11 +116,20 @@ const AdminCalendar = () => {
 function EmployeeTable() {
   const [employees, setEmployees] = useState([]); // Initialize with an empty array
   const { enqueueSnackbar } = useSnackbar();
+  const [data, setData] = React.useState({});
 
   useEffect(() => {
     const fetchEmployees = async () => { 
       try {
-        const response = await fetch('http://localhost:3001/api/employees');
+        const response = await fetch('http://localhost:3001/api/search/users', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'access_token': token
+            },
+            body: JSON.stringify(data),
+            
+            });
         const reply = await response.json();
 
         if (reply && reply.success) {
