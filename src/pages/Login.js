@@ -117,7 +117,12 @@ function LoginForm() {
                 setUser(reply.result);
                 console.log("Form Submitted");   
                 enqueueSnackbar("Login Successful!", {variant: 'success'});
-                navigate('/dashboard');
+                console.log(reply.result.profile.role);
+                if (reply.result.profile.role == 'admin') { 
+                    navigate('/admin');
+                } else {
+                    navigate('/dashboard')
+                }
             } else {
                 enqueueSnackbar(reply.message, {variant: 'error'});
             }

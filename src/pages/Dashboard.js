@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Header from './Header';
-import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/CalendarStyles.css';
 import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
+import { useUser } from '../components/UserContext'; // Import useUser
+import { useSnackbar } from 'notistack'; // For notifications
 
 const schema = {
   type: 'object',
@@ -148,13 +149,14 @@ const SubmitButton = styled('button')({
   },
 });
 
-const GreetingComponent = () => {
-  // Placeholder implement on backend
-  const username = 'USERNAME';
-  return <GreetingDiv>WELCOME BACK {username}!</GreetingDiv>;
+const GreetingComponent = ({ firstName, lastName }) => {
+  return <GreetingDiv>WELCOME BACK {firstName} {lastName}!</GreetingDiv>;
 };
 
 function DashboardPage() {
+  const { user } = useUser(); // Use user context to get user info
+  const { enqueueSnackbar } = useSnackbar(); // Use notistack for notifications
+
   const [time, setTime] = useState(new Date());
   const [data, setData] = useState({
     date: new Date().toISOString().split('T')[0], // Set today's date as the default
@@ -190,30 +192,46 @@ function DashboardPage() {
     setData(data);
   };
 
-  const handleDateChange = (date) => {
-    const formattedDate = date.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
-    setData((prevData) => ({
-      ...prevData,
-      date: formattedDate,
-    }));
-  };
+  const handleSubmit = async () => {
+    const payload = {
+      userID: user.profile._id, // Use userID from the profile
+      date: data.date,
+      timeIn: data.timeIn,
+      timeOut: data.timeOut,
+    };
 
-  const handleSubmit = () => {
-    console.log('Form data submitted:', data);
-    // Add your submission logic here, e.g., send data to the backend server
-  };
+    console.log('Form data submitted:', payload);
+    console.log('Token being sent:', user.token);
 
+    try {
+      const response = await fetch('http://localhost:3001/api/create/time', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'access_token': user.token // Include token for authentication
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        enqueueSnackbar('Time data submitted successfully!', { variant: 'success' });
+      } else {
+        enqueueSnackbar(result.message || 'Failed to submit time data', { variant: 'error' });
+      }
+    } catch (error) {
+      console.error('Error submitting time data:', error);
+      enqueueSnackbar('Error submitting time data', { variant: 'error' });
+    }
+  };
   return (
     <PageContainer>
       <Header />
       <MainContent>
         <MainDiv>
           <LeftSide>
-            <GreetingComponent />
-            <Calendar
-              className="calendar"
-              onChange={handleDateChange} // Handle date change
-            />
+            <GreetingComponent firstName={user.profile.firstName} lastName={user.profile.lastName} />
           </LeftSide>
           <RightSide>
             <ClockDiv>

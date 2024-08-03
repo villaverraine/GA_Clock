@@ -11,9 +11,9 @@ const PageContainer = styled('div')({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100vh', // Full height of the viewport
-    width: '100vw', // Full width of the viewport
-    backgroundColor: '#F3F3F3', // Background color for the whole page
+    height: '100vh', 
+    width: '100vw', 
+    backgroundColor: '#F3F3F3', 
 });
 
 const TextBody = styled('div')({
@@ -32,7 +32,7 @@ const ForgetDiv = styled('div')({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
-    backgroundColor: '#FDFDFD', // Background color for the login div
+    backgroundColor: '#FDFDFD', 
     borderRadius: '10px',
     padding: '8vh',
     width: '60vw',
