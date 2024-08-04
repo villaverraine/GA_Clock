@@ -11,7 +11,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import ForgetPass from './pages/ForgetPass';
-import AdminDashboardPage from './pages/Admin_Dashboard';
+import Admin from './pages/AdminDashboard';
 
 const router = createBrowserRouter ([
   {
@@ -32,8 +32,8 @@ const router = createBrowserRouter ([
   },
   {
     path: "/admin",
-    element: <AdminDashboardPage/>
-  }
+    element: <Admin/>,
+  },
 ]);
 
 

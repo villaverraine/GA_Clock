@@ -50,7 +50,7 @@ const schema = {
     properties: {
         username: { 
             type: 'string',
-            title: "Username"
+            title: "username"
         },
         password: { 
             type: 'string',
@@ -96,9 +96,6 @@ function LoginForm() {
     };
 
     const handleSubmit = async () => {
-        //FOR TESTING ONLY
-        navigate('/dashboard')
-        /////////////////////
         if(errors && errors.length > 0) {
             for(let i = 0; i < errors.length; i++){
                 enqueueSnackbar(errors[i]);
@@ -120,8 +117,12 @@ function LoginForm() {
                 setUser(reply.result);
                 console.log("Form Submitted");   
                 enqueueSnackbar("Login Successful!", {variant: 'success'});
-                setUser(reply.result)
-                navigate('/dashboard');
+                console.log(reply.result.profile.role);
+                if (reply.result.profile.role == 'admin') { 
+                    navigate('/admin');
+                } else {
+                    navigate('/dashboard')
+                }
             } else {
                 enqueueSnackbar(reply.message, {variant: 'error'});
             }
