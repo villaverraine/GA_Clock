@@ -53,7 +53,7 @@ const StyledButton = styled(Button)(({ active }) => ({
 }));
 
 
-const UserButton = styled(Button)(({ active }) => ({
+const UserButton =styled(Button)(({ active }) => ({
     marginLeft: '90px',
     height: '80%',
     textTransform: 'none',
@@ -71,7 +71,7 @@ const UserButton = styled(Button)(({ active }) => ({
     },
 }));
 
-const UserIcon = styled(PersonIcon)({
+const UserIcon=styled(PersonIcon)({
     marginRight: '10px',
     color: '#0185B2', 
     backgroundColor: '#E0E0E0', 

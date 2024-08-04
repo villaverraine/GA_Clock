@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import Header from './Header';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/CalendarStyles.css';
+import Calendar from 'react-calendar';
 import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
 import { useUser } from '../components/UserContext'; // Import useUser
@@ -55,6 +56,7 @@ const PageContainer = styled('div')({
   display: 'flex',
   flexDirection: 'column',
   height: '100vh',
+  backgroundColor: '#F3F3F3'
 });
 
 const MainContent = styled('div')({
@@ -70,9 +72,9 @@ const MainDiv = styled('div')({
   flexDirection: 'row',
   width: '90%',
   height: '80vh',
-  backgroundColor: '#F3F3F3',
-  borderRadius: '10px',
-  boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
+  // backgroundColor: '#F3F3F3',
+  // borderRadius: '10px',
+  // boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
   padding: '20px',
   boxSizing: 'border-box',
   justifyContent: 'space-between',
@@ -113,9 +115,9 @@ const ClockDiv = styled('div')({
   alignItems: 'center',
   backgroundColor: '#FDFDFD',
   borderRadius: '10px',
-  padding: '10px',
+  padding: '20px',
   height: '510px',
-  width: '440px',
+  width: '460px',
   boxSizing: 'border-box',
   overflow: 'hidden',
   boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
@@ -128,7 +130,7 @@ const AmpmSpan = styled('span')({
 });
 
 const TimeDiv = styled('div')({
-  fontSize: '6vw',
+  fontSize: '5vw',
   fontWeight: 'lighter',
   whiteSpace: 'nowrap',
 });
@@ -225,6 +227,14 @@ function DashboardPage() {
       enqueueSnackbar('Error submitting time data', { variant: 'error' });
     }
   };
+
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    setData((prevData) => ({ ...prevData, date: date.toISOString().split('T')[0] }));
+  };
+
   return (
     <PageContainer>
       <Header />
@@ -232,6 +242,11 @@ function DashboardPage() {
         <MainDiv>
           <LeftSide>
             <GreetingComponent firstName={user.profile.firstName} lastName={user.profile.lastName} />
+            <Calendar
+              className="calendar"
+              onChange={handleDateChange}
+              value={selectedDate}
+            />
           </LeftSide>
           <RightSide>
             <ClockDiv>
