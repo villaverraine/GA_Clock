@@ -8,15 +8,7 @@ import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
 import { useUser } from '../components/UserContext'; // Import useUser
 import { useSnackbar } from 'notistack'; // For notifications
-
-<<<<<<< HEAD
-=======
-//test
-
-import ProfileFloatingDiv from './Profile'
-
-
->>>>>>> 8353e883acfa26527ea51f7aac4d16a83f77960f
+import ProfileFloatingDiv from './Profile';
 const schema = {
   type: 'object',
   properties: {
