@@ -8,6 +8,7 @@ import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
 import { useUser } from '../components/UserContext'; // Import useUser
 import { useSnackbar } from 'notistack'; // For notifications
+import ProfileFloatingDiv from './Profile'
 
 const schema = {
   type: 'object',
@@ -235,9 +236,16 @@ function DashboardPage() {
     setData((prevData) => ({ ...prevData, date: date.toISOString().split('T')[0] }));
   };
 
+  
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const toggleProfile = () => {
+    setIsProfileOpen(!isProfileOpen);
+  };
+
+
   return (
     <PageContainer>
-      <Header />
+      <Header onProfileClick={toggleProfile}/>
       <MainContent>
         <MainDiv>
           <LeftSide>
@@ -265,6 +273,9 @@ function DashboardPage() {
           </RightSide>
         </MainDiv>
       </MainContent>
+
+      {isProfileOpen && <ProfileFloatingDiv user={user} onClose={toggleProfile} />}
+
     </PageContainer>
   );
 }
