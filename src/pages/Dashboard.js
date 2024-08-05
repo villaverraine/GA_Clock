@@ -8,7 +8,7 @@ import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
 import { useUser } from '../components/UserContext'; // Import useUser
 import { useSnackbar } from 'notistack'; // For notifications
-
+//test
 const schema = {
   type: 'object',
   properties: {
