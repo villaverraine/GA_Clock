@@ -135,7 +135,8 @@ function EmployeeTable() {
 
         if (reply && reply.success) {
           console.log(reply.result)
-          setEmployees(reply.result); 
+          const employees = reply.result.filter(user => user.role === 'employee');
+          setEmployees(employees);
           enqueueSnackbar("Employees Loaded Successfully!", { variant: 'success' });
         } else {
           enqueueSnackbar(reply.message || "Failed to fetch employees", { variant: 'error' });
@@ -154,22 +155,18 @@ function EmployeeTable() {
         <TableRow>
           <TableHeaderCell colSpan="2">Employees</TableHeaderCell>
         </TableRow>
-        <TableRow>
-          <TableHeaderCell>ID No.</TableHeaderCell>
-          <TableHeaderCell>Name</TableHeaderCell>
-        </TableRow>
       </TableHead>
       <tbody>
         {employees.length > 0 ? (
           employees.map((employee, index) => (
             <TableRow key={index}>
-              <TableCell>{employee._id}</TableCell>
-              <TableCell>{employee.name}</TableCell>
+              {/* <TableCell>{employee._id}</TableCell> */}
+              <TableCell>{employee.firstName} {employee.lastName}</TableCell>
             </TableRow>
           ))
         ) : (
           <TableRow>
-            <TableCell colSpan="2">No employees found.</TableCell>
+            <TableCell colSpan="2">No employees found.</TableCell> 
           </TableRow>
         )}
       </tbody>
@@ -178,23 +175,18 @@ function EmployeeTable() {
 }
 
 
-const GreetingComponent = () => {
-    //PLACEHOLDER IMPLEMENT ON BACKEND
-    var username = "USERNAME"
-    return (
-      <GreetingDiv>
-        WELCOME {username}!
-      </GreetingDiv>
-    );
-  };
+const GreetingComponent = ({ firstName, lastName }) => {
+  return <GreetingDiv>WELCOME {firstName} {lastName}!</GreetingDiv>;
+};
 
 function AdminDashboardPage() {
+  const { user } = useUser(); // Use user context to get user info
     return (
       <PageContainer>
         <Header />
         <MainContent>
           <LeftSide>
-            <GreetingComponent />
+            <GreetingComponent firstName={user.profile.firstName} lastName={user.profile.lastName} />
             <AdminCalendar />
           </LeftSide>
           <RightSide>
