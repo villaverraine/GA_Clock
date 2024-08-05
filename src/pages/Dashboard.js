@@ -9,6 +9,14 @@ import { materialRenderers, materialCells } from '@jsonforms/material-renderers'
 import { useUser } from '../components/UserContext'; // Import useUser
 import { useSnackbar } from 'notistack'; // For notifications
 
+<<<<<<< HEAD
+=======
+//test
+
+import ProfileFloatingDiv from './Profile'
+
+
+>>>>>>> 8353e883acfa26527ea51f7aac4d16a83f77960f
 const schema = {
   type: 'object',
   properties: {
@@ -256,9 +264,16 @@ function DashboardPage() {
     setData((prevData) => ({ ...prevData, date: date.toISOString().split('T')[0] }));
   };
 
+  
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const toggleProfile = () => {
+    setIsProfileOpen(!isProfileOpen);
+  };
+
+
   return (
     <PageContainer>
-      <Header />
+      <Header onProfileClick={toggleProfile}/>
       <MainContent>
         <MainDiv>
           <LeftSide>
@@ -287,6 +302,9 @@ function DashboardPage() {
           </RightSide>
         </MainDiv>
       </MainContent>
+
+      {isProfileOpen && <ProfileFloatingDiv user={user} onClose={toggleProfile} />}
+
     </PageContainer>
   );
 }

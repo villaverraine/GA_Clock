@@ -2,18 +2,16 @@ import React from 'react';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useUser } from '../components/UserContext'; 
 import PersonIcon from '@mui/icons-material/Person';
 
 const Header = styled('div')({
-    height: '10vh', // Fixed height for header
+    height: '10vh',
     backgroundColor: '#F3F3F3',
     color: '#FFF',
     display: 'flex',
     alignItems: 'center',
-    // justifyContent: 'space-between',
     paddingTop: '2vh',
-    paddingLeft: '2vh', // Padding for spacing on sides
+    paddingLeft: '2vh',
     boxShadow: '0 3px 5px rgba(0, 0, 0, 0.2)',
 });
 
@@ -29,11 +27,11 @@ const Logo = styled('div')({
 
 const ButtonContainer = styled('div')({
     display: 'flex',
+    alignContent: 'left',
     gap: '1vh',
     marginBottom: '2vh',
     marginRight: '10vh',
 });
-
 
 const StyledButton = styled(Button)(({ active }) => ({
     height: '80%',
@@ -51,7 +49,6 @@ const StyledButton = styled(Button)(({ active }) => ({
         border: `1px solid ${active ? '#0185B2' : '#0185B2'}`, 
     },
 }));
-
 
 const UserButton = styled(Button)(({ active }) => ({
     marginLeft: '90px',
@@ -76,17 +73,16 @@ const UserIcon = styled(PersonIcon)({
     color: '#0185B2', 
     backgroundColor: '#E0E0E0', 
     borderRadius: '50%'
-})
+});
 
-function HeaderComponent() {
+function HeaderComponent({ onProfileClick }) {
     const navigate = useNavigate();
     const location = useLocation();
-    // const { user } = useUser();
 
     const isActive = (path) => location.pathname === path;
 
     const handleViewChange = (path) => {
-        navigate(path)
+        navigate(path);
     };
 
     return (
@@ -95,29 +91,26 @@ function HeaderComponent() {
             <ButtonContainer>
                 <StyledButton 
                     active={isActive('/dashboard')}
-                    onClick = {() => handleViewChange('/dashboard')} // Change to Attendance Log
+                    onClick={() => handleViewChange('/dashboard')}
                 >
                     Dashboard
                 </StyledButton>
 
                 <StyledButton 
                     active={isActive('/logs')}
-                    onClick = {() => handleViewChange('/logs')}
+                    onClick={() => handleViewChange('/logs')}
                 >
                     Attendance Log
                 </StyledButton>
 
                 <UserButton
                     active={isActive('/profile')}
-                    onClick = {() => handleViewChange('/profile')} //Implement Profile
+                    onClick={onProfileClick}
                 >
                     <UserIcon/>
-                    {/* {user.profile.firstName} */}
                     Username {/*PLACEHOLDER*/}
-
                 </UserButton>
             </ButtonContainer>
-            
         </Header>
     );
 }

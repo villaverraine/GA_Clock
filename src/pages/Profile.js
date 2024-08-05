@@ -1,124 +1,102 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useUser } from '../components/UserContext'; 
-import PersonIcon from '@mui/icons-material/Person';
+import { Typography } from '@mui/material';
 
-const Header = styled('div')({
-    height: '10vh', // Fixed height for header
-    backgroundColor: '#F3F3F3',
-    color: '#FFF',
-    display: 'flex',
-    alignItems: 'center',
-    // justifyContent: 'space-between',
-    paddingTop: '2vh',
-    paddingLeft: '2vh', // Padding for spacing on sides
-    boxShadow: '0 3px 5px rgba(0, 0, 0, 0.2)',
+const Overlay = styled('div')({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'rgba(243, 243, 243, 0.7)',
+  zIndex: 999,
 });
 
-const Logo = styled('div')({
-    width: '100%',
-    height: '80%',
-    backgroundImage: 'url(/gallium31_logo.png)',
-    backgroundSize: 'contain',
-    backgroundRepeat: 'no-repeat',
-    marginBottom: '2vh',
-    marginLeft: '2vh',
+const ProfileContainer = styled('div')({
+  position: 'fixed',
+  top: '20%',
+  left: '50%',
+  transform: 'translate(-50%, 0)',
+  width: '300px',
+  padding: '20px',
+  backgroundColor: '#FDFDFD',
+  boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
+  borderRadius: '15px',
+  zIndex: 1000,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
 });
 
-const ButtonContainer = styled('div')({
-    display: 'flex',
-    gap: '1vh',
-    marginBottom: '2vh',
-    marginRight: '10vh',
+const ProfileCloseButton = styled('button')({
+  alignSelf: 'flex-end',
+  backgroundColor: '#F44336',
+  color: '#FFF',
+  border: 'none',
+  borderRadius: '50%',
+  width: '30px',
+  height: '30px',
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: '18px',
 });
 
+const ProfileLogo = styled('img')({
+  width: '150px', 
+  height: '150px', 
+  objectFit: 'cover', 
+  borderRadius: '50%',
+  boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
+  marginBottom: '10px',
+});
 
-const StyledButton = styled(Button)(({ active }) => ({
-    height: '80%',
-    textTransform: 'none',
-    fontSize: '1rem',
-    borderRadius: '4px',
-    padding: '0.5rem 1.5rem',
-    backgroundColor: active ? '#0185B2' : 'transparent',
-    color: active ? '#FFF' : '#0185B2', 
-    border: `1px solid ${active ? '#0185B2' : '#0185B2'}`, 
-    whiteSpace: 'nowrap',
-    '&:hover': {
-        backgroundColor: active ? '#0185B2' : 'transparent',
-        color: active ? '#FFF' : '#0185B2', 
-        border: `1px solid ${active ? '#0185B2' : '#0185B2'}`, 
-    },
-}));
+const ProfileDetails = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  padding: '10px',
+});
 
+const ProfileInfo = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  padding: '10px',
+  alignSelf: 'stretch',
+});
 
-const UserButton =styled(Button)(({ active }) => ({
-    marginLeft: '90px',
-    height: '80%',
-    textTransform: 'none',
-    fontSize: '1rem',
-    borderRadius: '4px',
-    padding: '0.5rem 1.5rem',
-    backgroundColor: active ? '#0185B2' : 'transparent',
-    color: active ? '#FFF' : '#0185B2', 
-    border: `1px solid ${active ? '#0185B2' : '#0185B2'}`, 
-    whiteSpace: 'nowrap',
-    '&:hover': {
-        backgroundColor: active ? '#0185B2' : 'transparent',
-        color: active ? '#FFF' : '#0185B2', 
-        border: `1px solid ${active ? '#0185B2' : '#0185B2'}`, 
-    },
-}));
-
-const UserIcon=styled(PersonIcon)({
-    marginRight: '10px',
-    color: '#0185B2', 
-    backgroundColor: '#E0E0E0', 
-    borderRadius: '50%'
-})
-
-function HeaderComponent() {
-    const navigate = useNavigate();
-    const location = useLocation();
-    // const { user } = useUser();
-
-    const isActive = (path) => location.pathname === path;
-
-    const handleViewChange = (path) => {
-        navigate(path)
-    };
+const Profile = ({ user, onClose }) => {
+    if (!user) return null;
 
     return (
-        <Header>
-            <Logo />
-            <ButtonContainer>
-                <StyledButton 
-                    active={isActive('/dashboard')}
-                    onClick = {() => handleViewChange('/dashboard')} // Change to Attendance Log
-                >
-                    Dashboard
-                </StyledButton>
+        <>
+        <Overlay onClick={onClose} />
+        <ProfileContainer>
+            <ProfileCloseButton onClick={onClose}>x</ProfileCloseButton>
+            <ProfileDetails>
+            <ProfileLogo src={user.profile.photoUrl} alt="Logo" /> {/*replace with photo*/}
+            <Typography variant="h6">{user.profile.firstName} {user.profile.lastName}</Typography>
+            <Typography variant="body1">Employee ID: {user.profile._id}</Typography>
+            </ProfileDetails>
+            <ProfileInfo>
+            <Typography variant="body1">
+                <strong>Username: </strong>
+                {user.profile.username}
+            </Typography>
+            <Typography variant="body1">
+                <strong>Email: </strong>
+                {user.profile.email}
+            </Typography>
+            <Typography variant="body1">
+                <strong>Role: </strong>
+                {user.profile.role}
+            </Typography>
+            </ProfileInfo>
+        </ProfileContainer>
+        </>
+  );
+};
 
-                <StyledButton 
-                    active={isActive('/admin')} // Change to Attendance Log
-                    onClick = {() => handleViewChange('/admin')} // Change to Attendance Log
-                >
-                    Attendance Log
-                </StyledButton>
-
-                <UserButton
-                    active={isActive('/profile')}
-                    onClick = {() => handleViewChange('/profile')} //Implement Profile
-                >
-                    <UserIcon/>
-                    {/* {user.profile.firstName} */}
-                    Username {/*PLACEHOLDER*/}
-
-                </UserButton>
-            </ButtonContainer>
-            
-        </Header>
-    );
-}
-export default HeaderComponent;
+export default Profile;

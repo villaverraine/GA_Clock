@@ -12,8 +12,8 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import ForgetPass from './pages/ForgetPass';
 import Admin from './pages/AdminDashboard';
-import Profile from './pages/Profile'
-import Logs from './pages/AttendanceLogs'
+import Profile from './pages/Profile';
+import Logs from './pages/AttendanceLogs';
 
 const router = createBrowserRouter ([
   {
