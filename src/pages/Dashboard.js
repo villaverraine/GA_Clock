@@ -102,24 +102,23 @@ const GreetingDiv = styled('div')({
   width: '100%', 
   boxSizing: 'border-box',
   borderRadius: '8px',
-  marginLeft:'163px'
+  marginLeft:'8.7vw'
 });
 
 const CalendarContainer = styled('div')({
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
-  marginLeft:'163px'
+  marginLeft:'8.7vw'
 });
 
 const CalendarStyled = styled(Calendar)({
   width: '100%',
-  maxWidth: '800px',
   boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
   borderRadius: '8px',
   border: 'none',
   height: 'auto', 
-  minHeight: '384px', 
+  minHeight: '383px', 
 });
 
 const RightSide = styled('div')({
