@@ -13,6 +13,7 @@ import Dashboard from './pages/Dashboard';
 import ForgetPass from './pages/ForgetPass';
 import Admin from './pages/AdminDashboard';
 import Profile from './pages/Profile'
+import Logs from './pages/AttendanceLogs'
 
 const router = createBrowserRouter ([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter ([
   {
     path: "/profile",
     element: <Profile/>,
+  },
+  {
+    path: "/logs",
+    element: <Logs/>,
   },
 ]);
 
