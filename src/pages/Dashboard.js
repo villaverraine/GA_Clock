@@ -81,7 +81,7 @@ const MainDiv = styled('div')({
 });
 
 const LeftSide = styled('div')({
-  marginTop: '90px',
+  marginTop: '94px',
   width: '50%',
   padding: '20px',
   boxSizing: 'border-box',
