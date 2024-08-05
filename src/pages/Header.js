@@ -101,8 +101,8 @@ function HeaderComponent() {
                 </StyledButton>
 
                 <StyledButton 
-                    active={isActive('/admin')} // Change to Attendance Log
-                    onClick = {() => handleViewChange('/admin')} // Change to Attendance Log
+                    active={isActive('/logs')}
+                    onClick = {() => handleViewChange('/logs')}
                 >
                     Attendance Log
                 </StyledButton>

@@ -50,7 +50,7 @@ const schema = {
     properties: {
         username: { 
             type: 'string',
-            title: "username"
+            title: "Username"
         },
         password: { 
             type: 'string',
@@ -92,7 +92,7 @@ function LoginForm() {
     };
 
     const handleForget = () => {
-        navigate('/forget');  // change to forgot password page when coded
+        navigate('/forget');
     };
 
     const handleSubmit = async () => {
