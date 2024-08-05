@@ -8,8 +8,7 @@ import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
 import { useUser } from '../components/UserContext'; // Import useUser
 import { useSnackbar } from 'notistack'; // For notifications
-import ProfileFloatingDiv from './Profile'
-
+import ProfileFloatingDiv from './Profile';
 const schema = {
   type: 'object',
   properties: {
@@ -82,10 +81,12 @@ const MainDiv = styled('div')({
 });
 
 const LeftSide = styled('div')({
+  marginTop: '90px',
   width: '50%',
   padding: '20px',
   boxSizing: 'border-box',
   textAlign: 'center',
+  
 });
 
 const GreetingDiv = styled('div')({
@@ -98,6 +99,27 @@ const GreetingDiv = styled('div')({
   textAlign: 'center',
   fontStyle: 'italic',
   letterSpacing: '4px',
+  width: '100%', 
+  boxSizing: 'border-box',
+  borderRadius: '8px',
+  marginLeft:'163px'
+});
+
+const CalendarContainer = styled('div')({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  marginLeft:'163px'
+});
+
+const CalendarStyled = styled(Calendar)({
+  width: '100%',
+  maxWidth: '800px',
+  boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
+  borderRadius: '8px',
+  border: 'none',
+  height: 'auto', 
+  minHeight: '384px', 
 });
 
 const RightSide = styled('div')({
@@ -107,6 +129,7 @@ const RightSide = styled('div')({
   alignItems: 'center',
   padding: '20px',
   boxSizing: 'border-box',
+  
 });
 
 const ClockDiv = styled('div')({
@@ -250,11 +273,12 @@ function DashboardPage() {
         <MainDiv>
           <LeftSide>
             <GreetingComponent firstName={user.profile.firstName} lastName={user.profile.lastName} />
-            <Calendar
-              className="calendar"
-              onChange={handleDateChange}
-              value={selectedDate}
-            />
+            <CalendarContainer>
+              <CalendarStyled
+                onChange={handleDateChange}
+                value={selectedDate}
+              />
+            </CalendarContainer>
           </LeftSide>
           <RightSide>
             <ClockDiv>
