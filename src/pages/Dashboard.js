@@ -101,13 +101,15 @@ const GreetingDiv = styled('div')({
   letterSpacing: '4px',
   width: '100%', 
   boxSizing: 'border-box',
-  borderRadius: '8px'
+  borderRadius: '8px',
+  marginLeft:'163px'
 });
 
 const CalendarContainer = styled('div')({
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
+  marginLeft:'163px'
 });
 
 const CalendarStyled = styled(Calendar)({
@@ -127,6 +129,7 @@ const RightSide = styled('div')({
   alignItems: 'center',
   padding: '20px',
   boxSizing: 'border-box',
+  
 });
 
 const ClockDiv = styled('div')({
