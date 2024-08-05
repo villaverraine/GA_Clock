@@ -10,27 +10,29 @@ const Header = styled('div')({
     color: '#FFF',
     display: 'flex',
     alignItems: 'center',
-    paddingTop: '2vh',
-    paddingLeft: '2vh',
+    padding: '0 2vh',
     boxShadow: '0 3px 5px rgba(0, 0, 0, 0.2)',
+    position: 'relative',
+    boxSizing: 'border-box',
+    // gap: '2vh',
 });
 
 const Logo = styled('div')({
-    width: '100%',
+    width: '15%',
     height: '80%',
     backgroundImage: 'url(/gallium31_logo.png)',
     backgroundSize: 'contain',
     backgroundRepeat: 'no-repeat',
-    marginBottom: '2vh',
-    marginLeft: '2vh',
+    backgroundPosition: 'center', 
 });
 
 const ButtonContainer = styled('div')({
     display: 'flex',
-    alignContent: 'left',
+    width: '90%',
     gap: '1vh',
-    marginBottom: '2vh',
-    marginRight: '10vh',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: '2vh',
 });
 
 const StyledButton = styled(Button)(({ active }) => ({
@@ -51,7 +53,8 @@ const StyledButton = styled(Button)(({ active }) => ({
 }));
 
 const UserButton = styled(Button)(({ active }) => ({
-    marginLeft: '90px',
+    marginLeft: 'auto',
+    marginRight:' 3vh',
     height: '80%',
     textTransform: 'none',
     fontSize: '1rem',

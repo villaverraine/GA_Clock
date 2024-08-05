@@ -78,7 +78,7 @@ const Profile = ({ user, onClose }) => {
             <ProfileDetails>
             <ProfileLogo src={user.profile.photoUrl} alt="Logo" /> {/*replace with photo*/}
             <Typography variant="h6">{user.profile.firstName} {user.profile.lastName}</Typography>
-            <Typography variant="body1">Employee ID: {user.profile._id}</Typography>
+            <Typography variant="body1"><strong>Intern ID: </strong>{user.profile._id}</Typography>
             </ProfileDetails>
             <ProfileInfo>
             <Typography variant="body1">
