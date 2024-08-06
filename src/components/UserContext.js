@@ -15,8 +15,16 @@ export const UserProvider = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(user));
     }, [user]);
 
+    const clearUser = () => {
+        setUser({ 
+            profile: { _id: '', username: '', email: '', firstName: '', lastName: '', role: '' }, 
+            token: ''
+        });
+        localStorage.removeItem('user');
+    };
+
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider value={{ user, setUser, clearUser }}>
             {children}
         </UserContext.Provider>
     );
