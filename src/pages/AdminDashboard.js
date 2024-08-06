@@ -122,13 +122,15 @@ const TableCell = styled('td')({
   '&:first-child': {
     borderRight: 'none',
   },
-  '&:nth-child(2)': {
-    borderLeft: 'none',
-    borderRight: 'none',
-    opacity: 0.20,
-  },
   '&:last-child': {
     borderLeft: 'none',
+  },
+  '&:not(:first-child):not(:last-child)': {
+    borderLeft: 'none',
+    borderRight: 'none',
+  },
+  '&:nth-last-child(2)': {
+    opacity: 0.25,
   },
 });
 
@@ -207,7 +209,7 @@ function EmployeeTable() {
   const renderEmptyRows = (count) => {
     return Array.from({ length: count }, (_, index) => (
       <TableRow key={`empty-${index}`} className="emptyRow">
-        <TableCell colSpan="2">&nbsp;</TableCell>
+        <TableCell colSpan="4">&nbsp;</TableCell>
       </TableRow>
     ));
   };
@@ -219,6 +221,9 @@ function EmployeeTable() {
       <TableRow key={index}>
         <TableCell>
           {employee.firstName.charAt(0).toUpperCase() + employee.firstName.slice(1)} {employee.lastName.charAt(0).toUpperCase() + employee.lastName.slice(1)}
+        </TableCell>
+        <TableCell>
+          { employee.timeRendered }/{ employee.timeRequired } Hours
         </TableCell>
         <TableCell>
           {employee.internID}
@@ -236,7 +241,9 @@ function EmployeeTable() {
     <Table>
       <TableHead>
         <TableRow>
-          <TableHeaderCell colSpan="2">Employees</TableHeaderCell>
+          <TableHeaderCell colSpan="4">
+            Employees
+          </TableHeaderCell>
         </TableRow>
       </TableHead>
       <tbody>
