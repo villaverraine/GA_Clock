@@ -5,6 +5,7 @@ import 'react-calendar/dist/Calendar.css';
 import '../styles/CalendarStyles.css';
 import { useSnackbar } from 'notistack';
 import { useUser } from '../components/UserContext';
+import ProfileFloatingDiv from './Profile'
 
 const PageContainer = styled('div')({
     display: 'flex',
@@ -160,6 +161,7 @@ function AttendanceLogsTable() {
     const currentMonthKey = `${currentMonth.getFullYear()}-${currentMonth.getMonth() + 1}`.padStart(7, '0');
     const logsToDisplay = groupedLogs[currentMonthKey] || [];
 
+    
     return (
         <MainDiv>
             <TableTitle>Daily Time Record</TableTitle>
@@ -223,12 +225,19 @@ function AttendanceLogsTable() {
 }
 
 function AttendanceLogsPage() {
+    const { user } = useUser();
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const toggleProfile = () => {
+      setIsProfileOpen(!isProfileOpen);
+    };
+
     return (
         <PageContainer>
-            <Header />
+            <Header onProfileClick={toggleProfile}/>
             <MainContent>
                 <AttendanceLogsTable />
             </MainContent>
+            {isProfileOpen && <ProfileFloatingDiv user={user} onClose={toggleProfile} />}
         </PageContainer>
     );
 }

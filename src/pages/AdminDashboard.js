@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
-import Header from './Header';
-import Calendar from 'react-calendar'
+import AdminHeader from './AdminHeader'; 
+import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/CalendarStyles.css';
 import { useSnackbar } from 'notistack';
-import { useUser } from '../components/UserContext'
+import { useUser } from '../components/UserContext';
+import ProfileFloatingDiv from './Profile'; 
 
 const PageContainer = styled('div')({
   display: 'flex',
@@ -48,21 +49,6 @@ const RightSide = styled('div')({
   boxSizing: 'border-box',
 });
 
-const EmployeeList = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: '#FDFDFD',
-  borderRadius: '10px',
-  padding: '28vh 24vw', 
-  maxWidth: '94%', 
-  maxHeight: '100%', 
-  boxSizing: 'border-box',
-  overflow: 'hidden', 
-  boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
-});
-
 const Table = styled('table')({
   borderRadius: '10px',
   backgroundColor: '#ffffff',
@@ -75,28 +61,32 @@ const Table = styled('table')({
 });
 
 const TableHead = styled('thead')({
-    backgroundColor: '#f5f5f5',
+  backgroundColor: '#f5f5f5',
 });
 
 const TableRow = styled('tr')({
-    '&:nth-of-type(odd)': {
-        backgroundColor: 'rgba(1, 133, 178, 0.10)',
-    },
+  '&:nth-of-type(odd)': {
+    backgroundColor: 'rgba(1, 133, 178, 0.10)',
+  },
 });
 
 const TableCell = styled('td')({
-    padding: '12px 20px',
-    border: '1px solid #ddd',
-    textAlign: 'left',
+  padding: '12px 20px',
+  border: '1px solid #ddd',
+  textAlign: 'left',
 });
 
 const TableHeaderCell = styled(TableCell)({
-    fontWeight: 'bold',
-    textAlign :'center',
-    backgroundColor: '#ffffff',
-    borderTop: '1px solid #ddd', // Add top border to header cell
-    borderBottom: '1px solid #ddd', // Add bottom border to header cell
+  fontWeight: 'bold',
+  textAlign :'center',
+  backgroundColor: '#ffffff',
+  borderTop: '1px solid #ddd',
+  borderBottom: '1px solid #ddd',
 });
+
+const GreetingComponent = ({ firstName, lastName }) => {
+  return <GreetingDiv>WELCOME {firstName} {lastName}!</GreetingDiv>;
+};
 
 const AdminCalendar = () => {
   const [date, setDate] = useState(new Date());
@@ -112,29 +102,25 @@ const AdminCalendar = () => {
   );
 };
 
-
 function EmployeeTable() {
-  const [employees, setEmployees] = useState([]); // Initialize with an empty array
+  const [employees, setEmployees] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
-  const [data, setData] = React.useState({});
-  const { user, setUser } = useUser();
+  const { user } = useUser();
 
   useEffect(() => {
     const fetchEmployees = async () => { 
       try {
         const response = await fetch('http://localhost:3001/api/search/users', {
-            method: 'POST',
-            headers: { 
-              'Content-Type': 'application/json',
-              'access_token': user.token
-            },
-            body: JSON.stringify(data),
-            
-            });
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'access_token': user.token
+          },
+          body: JSON.stringify({}),
+        });
         const reply = await response.json();
 
         if (reply && reply.success) {
-          console.log(reply.result)
           const employees = reply.result.filter(user => user.role === 'employee');
           setEmployees(employees);
           enqueueSnackbar("Employees Loaded Successfully!", { variant: 'success' });
@@ -147,7 +133,7 @@ function EmployeeTable() {
     };
 
     fetchEmployees();
-  }, []);
+  }, [enqueueSnackbar, user.token]);
 
   return (
     <Table>
@@ -160,7 +146,6 @@ function EmployeeTable() {
         {employees.length > 0 ? (
           employees.map((employee, index) => (
             <TableRow key={index}>
-              {/* <TableCell>{employee._id}</TableCell> */}
               <TableCell>{employee.firstName} {employee.lastName}</TableCell>
             </TableRow>
           ))
@@ -174,27 +159,28 @@ function EmployeeTable() {
   );
 }
 
-
-const GreetingComponent = ({ firstName, lastName }) => {
-  return <GreetingDiv>WELCOME {firstName} {lastName}!</GreetingDiv>;
-};
-
 function AdminDashboardPage() {
   const { user } = useUser(); // Use user context to get user info
-    return (
-      <PageContainer>
-        <Header />
-        <MainContent>
-          <LeftSide>
-            <GreetingComponent firstName={user.profile.firstName} lastName={user.profile.lastName} />
-            <AdminCalendar />
-          </LeftSide>
-          <RightSide>
-            <EmployeeTable/>
-          </RightSide>
-        </MainContent>
-      </PageContainer>
-    );
-  }
-  
-  export default AdminDashboardPage;
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const toggleProfile = () => {
+    setIsProfileOpen(!isProfileOpen);
+  };
+
+  return (
+    <PageContainer>
+      <AdminHeader onProfileClick={toggleProfile} />
+      <MainContent>
+        <LeftSide>
+          <GreetingComponent firstName={user.profile.firstName} lastName={user.profile.lastName} />
+          <AdminCalendar />
+        </LeftSide>
+        <RightSide>
+          <EmployeeTable />
+        </RightSide>
+      </MainContent>
+      {isProfileOpen && <ProfileFloatingDiv user={user} onClose={toggleProfile} />}
+    </PageContainer>
+  );
+}
+
+export default AdminDashboardPage;
