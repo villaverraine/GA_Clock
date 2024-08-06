@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import Button from '@mui/material/Button';
 import AdminHeader from './AdminHeader'; 
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/CalendarStyles.css';
 import { useSnackbar } from 'notistack';
 import { useUser } from '../components/UserContext';
+import EditEmployeeModal from '../components/EditEmployeeModal';
 import ProfileFloatingDiv from './Profile'; 
 
 const PageContainer = styled('div')({
@@ -174,6 +174,8 @@ const AdminCalendar = () => {
 
 function EmployeeTable() {
   const [employees, setEmployees] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useUser();
   const minimumRowsCount = 10; // Minimum number of rows to display
@@ -206,6 +208,18 @@ function EmployeeTable() {
     fetchEmployees();
   }, [enqueueSnackbar, user.token]);
 
+  const handleEditClick = (employee) => {
+    setSelectedEmployee(employee);
+    setModalOpen(true);
+  };
+
+  const handleSave = (updatedEmployee) => {
+    // Update employee logic here (e.g., make an API call)
+    setEmployees(employees.map(emp =>
+      emp.id === updatedEmployee.id ? updatedEmployee : emp
+    ));
+  };
+
   const renderEmptyRows = (count) => {
     return Array.from({ length: count }, (_, index) => (
       <TableRow key={`empty-${index}`} className="emptyRow">
@@ -229,7 +243,7 @@ function EmployeeTable() {
           {employee.internID}
         </TableCell>
         <ActionItems className="action-items">
-          <IconButton size="small">
+          <IconButton size="small" onClick={() => handleEditClick(employee)}>
             <MenuIcon />
           </IconButton>
         </ActionItems>
@@ -238,21 +252,31 @@ function EmployeeTable() {
   };
 
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableHeaderCell colSpan="4">
-            Employees
-          </TableHeaderCell>
-        </TableRow>
-      </TableHead>
-      <tbody>
-        {employees.map((employee, index) => (
-          renderRowInfo(employee, index)
-        ))}
-        {renderEmptyRows(emptyRowsCount)}
-      </tbody>
-    </Table>
+    <>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell colSpan="4">
+              Employees
+            </TableHeaderCell>
+          </TableRow>
+        </TableHead>
+        <tbody>
+          {employees.map((employee, index) => (
+            renderRowInfo(employee, index)
+          ))}
+          {renderEmptyRows(emptyRowsCount)}
+        </tbody>
+      </Table>
+      {selectedEmployee && (
+        <EditEmployeeModal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          employee={selectedEmployee}
+          onSave={handleSave}
+        />
+      )}
+    </>
   );
 }
 
