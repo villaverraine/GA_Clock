@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
 import AdminHeader from './AdminHeader'; 
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/CalendarStyles.css';
 import { useSnackbar } from 'notistack';
 import { useUser } from '../components/UserContext';
+import EditEmployeeModal from '../components/EditEmployeeModal';
 import ProfileFloatingDiv from './Profile'; 
 
 const PageContainer = styled('div')({
@@ -80,6 +83,17 @@ const AdminCalendarStyled = styled(Calendar)({
   },
 });
 
+
+const TableContainer = styled('div')({
+  width: '100%',
+  maxHeight: '100%', // Set your desired max height here
+  overflowY: 'auto',
+  borderRadius: '10px',
+  boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
+  border: '1px solid #ddd',
+  backgroundColor: '#ffffff',
+});
+
 const Table = styled('table')({
   borderRadius: '10px',
   backgroundColor: '#ffffff',
@@ -96,6 +110,18 @@ const TableHead = styled('thead')({
 });
 
 const TableRow = styled('tr')({
+  position: 'relative',
+  height: 'auto',
+  '&:hover .action-items': {
+    visibility: 'visible',
+    opacity: 1
+  },
+  '&:hover:not(.emptyRow)': {
+    backgroundColor: 'rgba(1, 133, 178, 0.02)',
+  },
+  '&:hover:not(.emptyRow) td:not(:last-child)': {
+    backgroundColor: 'rgba(1, 133, 178, 0.02)', // Ensure other cells get the same highlight
+  },
   '&:nth-of-type(odd)': {
     backgroundColor: 'rgba(1, 133, 178, 0.10)',
   },
@@ -105,14 +131,41 @@ const TableCell = styled('td')({
   padding: '12px 20px',
   border: '1px solid #ddd',
   textAlign: 'left',
+  height: 'auto',
+  whiteSpace: 'nowrap',
+  '&:first-child': {
+    borderRight: 'none',
+  },
+  '&:last-child': {
+    borderLeft: 'none',
+  },
+  '&:not(:first-child):not(:last-child)': {
+    borderLeft: 'none',
+    borderRight: 'none',
+  },
+  '&:nth-last-child(2)': {
+    opacity: 0.25,
+  },
 });
 
 const TableHeaderCell = styled(TableCell)({
   fontWeight: 'bold',
-  textAlign :'center',
+  textAlign: 'center',
   backgroundColor: '#ffffff',
   borderTop: '1px solid #ddd',
   borderBottom: '1px solid #ddd',
+});
+
+const ActionItems = styled('div')({
+  visibility: 'hidden',
+  opacity: 0,
+  transition: 'opacity 0.3s',
+  position: 'absolute',
+  right: '10px',
+  top: '50%',
+  transform: 'translateY(-50%)',
+  display: 'flex',
+  alignItems: 'center',
 });
 
 const GreetingComponent = ({ firstName, lastName }) => {
@@ -135,11 +188,17 @@ const AdminCalendar = () => {
 
 function EmployeeTable() {
   const [employees, setEmployees] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useUser();
+  const minimumRowsCount = 20; // Minimum number of rows to display
 
   useEffect(() => {
-    const fetchEmployees = async () => { 
+    fetchEmployees();
+  }, [enqueueSnackbar, user.token]);
+
+  const fetchEmployees = async () => { 
       try {
         const response = await fetch('http://localhost:3001/api/search/users', {
           method: 'POST',
@@ -152,41 +211,116 @@ function EmployeeTable() {
         const reply = await response.json();
 
         if (reply && reply.success) {
-          const employees = reply.result.filter(user => user.role === 'employee');
+          const employees = reply.result.filter(user => user.role === 'intern');
           setEmployees(employees);
-          enqueueSnackbar("Employees Loaded Successfully!", { variant: 'success' });
+          // uncomment for developer debugging
+          // enqueueSnackbar("Interns Loaded Successfully!", { variant: 'success' });
+          console.log("Interns Loaded Successfully!")
         } else {
-          enqueueSnackbar(reply.message || "Failed to fetch employees", { variant: 'error' });
+          enqueueSnackbar(reply.message || "Failed to fetch interns.", { variant: 'error' });
+          console.err("API error")
         }
       } catch (error) {
         enqueueSnackbar("API error: " + error.message, { variant: 'error' });
+        console.err("API error: " + error.message)
       }
     };
 
-    fetchEmployees();
-  }, [enqueueSnackbar, user.token]);
+  const handleEditClick = (employee) => {
+    setSelectedEmployee(employee);
+    setModalOpen(true);
+  };
+
+  const handleSave = async (updatedEmployee) => {
+    const payload = {
+      username: updatedEmployee.username,
+      firstName: updatedEmployee.firstName,
+      lastName: updatedEmployee.lastName,
+      password: updatedEmployee.password
+    };
+    
+    try {
+      const response = await fetch(`http://localhost:3001/api/update/users/${updatedEmployee._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'access_token': user.token 
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        enqueueSnackbar("Profile Updated Successfully!", { variant: 'success' });
+        console.log('Employee updated successfully:', result);
+        fetchEmployees();
+      } else {
+        enqueueSnackbar(result.message || 'Failed to update profile', { variant: 'error' });
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      enqueueSnackbar('Error updating profile', { variant: 'error' });
+    }
+  };
+
+  const renderEmptyRows = (count) => {
+    return Array.from({ length: count }, (_, index) => (
+      <TableRow key={`empty-${index}`} className="emptyRow">
+        <TableCell colSpan="4">&nbsp;</TableCell>
+      </TableRow>
+    ));
+  };
+
+  const emptyRowsCount = Math.max(0, minimumRowsCount - employees.length);
+
+  const renderRowInfo = (employee, index) => {
+    return (
+      <TableRow key={index}>
+        <TableCell>
+          {employee.firstName.charAt(0).toUpperCase() + employee.firstName.slice(1)} {employee.lastName.charAt(0).toUpperCase() + employee.lastName.slice(1)}
+        </TableCell>
+        <TableCell>
+          { employee.timeRendered }/{ employee.timeRequired } Hours
+        </TableCell>
+        <TableCell>
+          {employee.internID}
+        </TableCell>
+        <ActionItems className="action-items">
+          <IconButton size="small" onClick={() => handleEditClick(employee)}>
+            <MenuIcon />
+          </IconButton>
+        </ActionItems>
+      </TableRow>
+    );
+  };
 
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableHeaderCell colSpan="2">Employees</TableHeaderCell>
-        </TableRow>
-      </TableHead>
-      <tbody>
-        {employees.length > 0 ? (
-          employees.map((employee, index) => (
-            <TableRow key={index}>
-              <TableCell>{employee.firstName} {employee.lastName}</TableCell>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableHeaderCell colSpan="4">
+                Employees
+              </TableHeaderCell>
             </TableRow>
-          ))
-        ) : (
-          <TableRow>
-            <TableCell colSpan="2">No employees found.</TableCell> 
-          </TableRow>
+          </TableHead>
+          <tbody>
+            {employees.map((employee, index) => (
+              renderRowInfo(employee, index)
+            ))}
+            {renderEmptyRows(emptyRowsCount)}
+          </tbody>
+        </Table>
+        {selectedEmployee && (
+          <EditEmployeeModal
+            open={modalOpen}
+            onClose={() => setModalOpen(false)}
+            employee={selectedEmployee}
+            onSave={handleSave}
+          />
         )}
-      </tbody>
-    </Table>
+      </TableContainer>
   );
 }
 
