@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
-import { Modal, Box, TextField, Button, Typography, IconButton, InputAdornment} from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Modal, Box, TextField, Button, Typography, IconButton, InputAdornment } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const EditEmployeeModal = ({ open, onClose, employee, onSave }) => {
-  const [username, setUsername] = useState(employee ? employee.username : '');
-  const [firstName, setFirstName] = useState(employee ? employee.firstName : '');
-  const [lastName, setLastName] = useState(employee ? employee.lastName : '');
+  const [username, setUsername] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (employee) {
+      setUsername(employee.username);
+      setFirstName(employee.firstName);
+      setLastName(employee.lastName);
+      setPassword('');
+    }
+  }, [employee]);
 
   const handleSave = () => {
     const updatedEmployee = { ...employee, username, firstName, lastName };
@@ -16,17 +25,17 @@ const EditEmployeeModal = ({ open, onClose, employee, onSave }) => {
     if (password !== '') {
       updatedEmployee.password = password;
     }
-    
+
     onSave(updatedEmployee);
     setShowPassword(false);
     onClose();
   };
-  
+
   const handleCancel = () => {
     setUsername(employee ? employee.username : '');
-    setUsername(employee ? employee.firstName : '');
-    setUsername(employee ? employee.lastName : '');
-    setPassword(employee ? employee.password : '');
+    setFirstName(employee ? employee.firstName : '');
+    setLastName(employee ? employee.lastName : '');
+    setPassword('');
     setShowPassword(false);
     onClose();
   };
@@ -34,7 +43,6 @@ const EditEmployeeModal = ({ open, onClose, employee, onSave }) => {
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
-  
 
   return (
     <Modal open={open} onClose={handleCancel}>
@@ -106,7 +114,6 @@ const EditEmployeeModal = ({ open, onClose, employee, onSave }) => {
             Save
           </Button>
         </Box>
-
       </Box>
     </Modal>
   );

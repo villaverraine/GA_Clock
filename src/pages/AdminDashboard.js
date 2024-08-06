@@ -227,6 +227,8 @@ function EmployeeTable() {
     };
 
   const handleEditClick = (employee) => {
+    // commented for dev debugging
+    // console.log(employee)
     setSelectedEmployee(employee);
     setModalOpen(true);
   };
