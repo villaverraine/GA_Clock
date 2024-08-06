@@ -167,28 +167,39 @@ async function startApp() {
   });
 
   app.post('/api/register', async (req, res) => {
-    const { firstname, lastname, username, password, email } = req.body;
+    const { firstName, lastName, username, password, email, internID, role, timeRendered, timeRequired } = req.body;
 
-    if(!(firstname && lastname && username && email && password)){
-      res.status(400).send('All inputs are required.');
-      return;
+    if(!(firstName && lastName && username && email && password && internID && role && timeRendered && timeRequired)){
+        res.status(400).send('All inputs are required.');
+        return;
     }
 
-    const userCheck = await db.collection('users').findOne({username: username, password: password});
+    const userCheck = await db.collection('users').findOne({username: username});
 
     if(userCheck){
-      res.status(409).send('User Already Exist.');
-      return;
+        res.status(409).send('User Already Exist.');
+        return;
     }
 
     try {
-      const result = await db.collection('users').insertOne({firstname: firstname, lastname: lastname, username: username, password: password, email: email});
-      res.json({success: true, message: "create succeeded.", result: result});
+        const result = await db.collection('users').insertOne({
+            firstName: firstName, 
+            lastName: lastName, 
+            username: username, 
+            password: password, 
+            email: email, 
+            internID: internID, 
+            role: role, 
+            timeRendered: timeRendered, 
+            timeRequired: timeRequired
+        });
+        res.json({success: true, message: "create succeeded.", result: result});
     } catch (error) {
-      console.error(error);
-      res.json({success: false, message: "create failed."});
+        console.error(error);
+        res.json({success: false, message: "create failed."});
     }
-  })
+});
+
 
   app.get('/api/status', async (req, res) => {
     res.json({status: "Server is up and running."});

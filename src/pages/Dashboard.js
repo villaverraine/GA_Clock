@@ -6,9 +6,11 @@ import '../styles/CalendarStyles.css';
 import Calendar from 'react-calendar';
 import { JsonForms } from '@jsonforms/react';
 import { materialRenderers, materialCells } from '@jsonforms/material-renderers';
-import { useUser } from '../components/UserContext'; // Import useUser
-import { useSnackbar } from 'notistack'; // For notifications
+import { useUser } from '../components/UserContext'; 
+import { useSnackbar } from 'notistack'; 
 import ProfileFloatingDiv from './Profile';
+
+// import { AppContext } from '../components/AppContext';
 const schema = {
   type: 'object',
   properties: {
@@ -17,18 +19,32 @@ const schema = {
       format: 'date',
       title: 'Date'
     },
-    timeIn: {
+    timeInAM: {
       type: 'string',
       format: 'time',
-      title: 'Time In'
+      title: 'Time In (AM)'
     },
-    timeOut: {
+    timeOutAM: {
       type: 'string',
       format: 'time',
-      title: 'Time Out'
+      title: 'Time Out (AM)'
+    },
+    timeInPM: {
+      type: 'string',
+      format: 'time',
+      title: 'Time In (PM)'
+    },
+    timeOutPM: {
+      type: 'string',
+      format: 'time',
+      title: 'Time Out (PM)'
+    },
+    timeRendered: {
+      type: 'string',
+      title: 'Time Rendered'
     }
   },
-  required: ['date', 'timeIn', 'timeOut']
+  required: ['date', 'timeInAM', 'timeOutAM', 'timeInPM', 'timeOutPM']
 };
 
 const uischema = {
@@ -43,11 +59,26 @@ const uischema = {
     },
     {
       type: 'Control',
-      scope: '#/properties/timeIn'
+      scope: '#/properties/timeInAM'
     },
     {
       type: 'Control',
-      scope: '#/properties/timeOut'
+      scope: '#/properties/timeOutAM'
+    },
+    {
+      type: 'Control',
+      scope: '#/properties/timeInPM'
+    },
+    {
+      type: 'Control',
+      scope: '#/properties/timeOutPM'
+    },
+    {
+      type: 'Control',
+      scope: '#/properties/timeRendered',
+      options: {
+        readonly: true
+      }
     }
   ]
 };
@@ -81,7 +112,7 @@ const MainDiv = styled('div')({
 });
 
 const LeftSide = styled('div')({
-  marginTop: '94px',
+  marginTop: '90px',
   width: '50%',
   padding: '20px',
   boxSizing: 'border-box',
@@ -102,23 +133,24 @@ const GreetingDiv = styled('div')({
   width: '100%', 
   boxSizing: 'border-box',
   borderRadius: '8px',
-  marginLeft:'8.7vw'
+  marginLeft:'163px'
 });
 
 const CalendarContainer = styled('div')({
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
-  marginLeft:'8.7vw'
+  marginLeft:'163px'
 });
 
 const CalendarStyled = styled(Calendar)({
   width: '100%',
+  maxWidth: '800px',
   boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
   borderRadius: '8px',
   border: 'none',
   height: 'auto', 
-  minHeight: '383px', 
+  minHeight: '384px', 
 });
 
 const RightSide = styled('div')({
@@ -139,7 +171,7 @@ const ClockDiv = styled('div')({
   backgroundColor: '#FDFDFD',
   borderRadius: '10px',
   padding: '20px',
-  height: '510px',
+  height: '700px',
   width: '460px',
   boxSizing: 'border-box',
   overflow: 'hidden',
@@ -180,20 +212,25 @@ const GreetingComponent = ({ firstName, lastName }) => {
 
 function DashboardPage() {
   const { user } = useUser(); // Use user context to get user info
-  const { enqueueSnackbar } = useSnackbar(); // Use notistack for notifications
-
+  const { enqueueSnackbar } = useSnackbar(); 
+  // const appContext = useContext(AppContext);
   const [time, setTime] = useState(new Date());
   const [data, setData] = useState({
-    date: new Date().toISOString().split('T')[0], // Set today's date as the default
-    timeIn: '',
-    timeOut: '',
+    date: new Date().toLocaleDateString('en-CA'),
+    timeInAM: '',
+    timeOutAM: '',
+    timeInPM: '',
+    timeOutPM: '',
+    timeRendered: ''
   });
-
+  
   useEffect(() => {
     const intervalId = setInterval(() => {
       setTime(new Date());
     }, 1000);
-
+    // for (i in appContext) {
+    //   console.log(i, appContext[i]);
+    // }
     return () => clearInterval(intervalId);
   }, []);
 
@@ -211,18 +248,45 @@ function DashboardPage() {
     return { ampm, currentTime };
   };
 
+  const calculateTotalHours = (timeInAM, timeOutAM, timeInPM, timeOutPM) => {
+    const calculateDuration = (timeIn, timeOut) => {
+      const inTime = new Date(`1970-01-01T${timeIn}Z`);
+      const outTime = new Date(`1970-01-01T${timeOut}Z`);
+
+      let duration = (outTime - inTime) / (1000 * 60);
+      if (duration < 0) {
+        duration += 24 * 60;
+      }
+
+      return duration;
+    };
+
+    const amDuration = calculateDuration(timeInAM, timeOutAM);
+    const pmDuration = calculateDuration(timeInPM, timeOutPM);
+
+    const totalMinutes = amDuration + pmDuration;
+    const totalHours = Math.floor(totalMinutes / 60);
+    const remainingMinutes = totalMinutes % 60;
+
+    return `${totalHours}:${remainingMinutes}`;
+  };
+
   const { ampm, currentTime } = formatTime(time);
 
   const handleChange = ({ data }) => {
-    setData(data);
+    const timeRendered = calculateTotalHours(data.timeInAM, data.timeOutAM, data.timeInPM, data.timeOutPM);
+    setData({ ...data, timeRendered });
   };
 
   const handleSubmit = async () => {
     const payload = {
-      userID: user.profile._id, // Use userID from the profile
+      userID: user.profile._id,
       date: data.date,
-      timeIn: data.timeIn,
-      timeOut: data.timeOut,
+      timeInAM: data.timeInAM,
+      timeOutAM: data.timeOutAM,
+      timeInPM: data.timeInPM,
+      timeOutPM: data.timeOutPM,
+      timeRendered: data.timeRendered
     };
 
     console.log('Form data submitted:', payload);
@@ -233,7 +297,7 @@ function DashboardPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'access_token': user.token // Include token for authentication
+          'access_token': user.token 
         },
         body: JSON.stringify(payload)
       });
@@ -251,14 +315,6 @@ function DashboardPage() {
     }
   };
 
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-    setData((prevData) => ({ ...prevData, date: date.toISOString().split('T')[0] }));
-  };
-
-  
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const toggleProfile = () => {
     setIsProfileOpen(!isProfileOpen);
@@ -273,10 +329,7 @@ function DashboardPage() {
           <LeftSide>
             <GreetingComponent firstName={user.profile.firstName} lastName={user.profile.lastName} />
             <CalendarContainer>
-              <CalendarStyled
-                onChange={handleDateChange}
-                value={selectedDate}
-              />
+              <CalendarStyled/>
             </CalendarContainer>
           </LeftSide>
           <RightSide>

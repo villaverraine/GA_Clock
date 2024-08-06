@@ -14,6 +14,7 @@ import ForgetPass from './pages/ForgetPass';
 import Admin from './pages/AdminDashboard';
 import Profile from './pages/Profile';
 import Logs from './pages/AttendanceLogs';
+import Registration from './pages/Register';
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
   {
     path: "/logs",
     element: <Logs/>,
+  },
+  {
+    path: "/registration",
+    element: <Registration/>,
   },
 ]);
 
