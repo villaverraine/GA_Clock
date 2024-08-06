@@ -11,9 +11,9 @@ const PageContainer = styled('div')({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100vh', // Full height of the viewport
-    width: '100vw', // Full width of the viewport
-    backgroundColor: '#F3F3F3', // Background color for the whole page
+    height: '100vh',
+    width: '100vw', 
+    backgroundColor: '#F3F3F3', 
 });
 
 const LoginDiv = styled('div')({
@@ -21,7 +21,7 @@ const LoginDiv = styled('div')({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'column',
-    backgroundColor: '#FDFDFD', // Background color for the login div
+    backgroundColor: '#FDFDFD',
     borderRadius: '10px',
     padding: '8vh',
     width: '60vw',
@@ -86,14 +86,6 @@ function LoginForm() {
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
     const { setUser } = useUser();
-    
-    const handleRegister = () => {
-        navigate('/signup');  
-    };
-
-    const handleForget = () => {
-        navigate('/forget');
-    };
 
     const handleSubmit = async () => {
         if(errors && errors.length > 0) {
@@ -149,10 +141,6 @@ function LoginForm() {
                 }}
             />
             <Button variant="contained" onClick={handleSubmit} style={{width: '100%', marginTop: '30px'}}>Login</Button>
-            <ButtonContainer>
-                <Button variant="text" onClick={handleForget}>Forgot Password?</Button>
-                <Button variant="text" onClick={handleRegister}>Don't have an account? Sign Up.</Button>
-            </ButtonContainer>
         </LoginDiv>
     </PageContainer>
     );
