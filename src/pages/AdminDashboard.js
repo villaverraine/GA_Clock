@@ -137,6 +137,7 @@ function EmployeeTable() {
   const [employees, setEmployees] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useUser();
+  const minimumRowsCount = 10; // Minimum number of rows to display
 
   useEffect(() => {
     const fetchEmployees = async () => { 
@@ -166,6 +167,16 @@ function EmployeeTable() {
     fetchEmployees();
   }, [enqueueSnackbar, user.token]);
 
+  const renderEmptyRows = (count) => {
+    return Array.from({ length: count }, (_, index) => (
+      <TableRow key={`empty-${index}`}>
+        <TableCell colSpan="2">&nbsp;</TableCell>
+      </TableRow>
+    ));
+  };
+
+  const emptyRowsCount = Math.max(0, minimumRowsCount - employees.length);
+
   return (
     <Table>
       <TableHead>
@@ -174,17 +185,12 @@ function EmployeeTable() {
         </TableRow>
       </TableHead>
       <tbody>
-        {employees.length > 0 ? (
-          employees.map((employee, index) => (
-            <TableRow key={index}>
-              <TableCell>{employee.firstName} {employee.lastName}</TableCell>
-            </TableRow>
-          ))
-        ) : (
-          <TableRow>
-            <TableCell colSpan="2">No employees found.</TableCell> 
+        {employees.map((employee, index) => (
+          <TableRow key={index}>
+            <TableCell>{employee.firstName} {employee.lastName}</TableCell>
           </TableRow>
-        )}
+        ))}
+        {renderEmptyRows(emptyRowsCount)}
       </tbody>
     </Table>
   );
