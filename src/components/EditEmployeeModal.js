@@ -7,7 +7,7 @@ const EditEmployeeModal = ({ open, onClose, employee, onSave }) => {
   const [username, setUsername] = useState(employee ? employee.username : '');
   const [firstName, setFirstName] = useState(employee ? employee.firstName : '');
   const [lastName, setLastName] = useState(employee ? employee.lastName : '');
-  const [password, setPassword] = useState(employee ? employee.password : '');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSave = () => {
