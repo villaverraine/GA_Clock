@@ -76,7 +76,7 @@ const Profile = ({ user, onClose }) => {
         <ProfileContainer>
             <ProfileCloseButton onClick={onClose}>x</ProfileCloseButton>
             <ProfileDetails>
-            <ProfileLogo src={user.profile.photoUrl} alt="Logo" /> {/*replace with photo*/}
+            <ProfileLogo src={user.profile.photoUrl} alt="Logo" /> 
             <Typography variant="h6">{user.profile.firstName} {user.profile.lastName}</Typography>
             <Typography variant="body1"><strong>Intern ID: </strong>{user.profile._id}</Typography>
             </ProfileDetails>
