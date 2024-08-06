@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import Button from '@mui/material/Button';
 import AdminHeader from './AdminHeader'; 
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -96,6 +99,17 @@ const TableHead = styled('thead')({
 });
 
 const TableRow = styled('tr')({
+  position: 'relative',
+  '&:hover .action-items': {
+    visibility: 'visible',
+    opacity: 1
+  },
+  '&:hover:not(.emptyRow)': {
+    backgroundColor: 'rgba(1, 133, 178, 0.02)',
+  },
+  '&:hover:not(.emptyRow) td:not(:last-child)': {
+    backgroundColor: 'rgba(1, 133, 178, 0.02)', // Ensure other cells get the same highlight
+  },
   '&:nth-of-type(odd)': {
     backgroundColor: 'rgba(1, 133, 178, 0.10)',
   },
@@ -105,14 +119,37 @@ const TableCell = styled('td')({
   padding: '12px 20px',
   border: '1px solid #ddd',
   textAlign: 'left',
+  '&:first-child': {
+    borderRight: 'none',
+  },
+  '&:nth-child(2)': {
+    borderLeft: 'none',
+    borderRight: 'none',
+    opacity: 0.20,
+  },
+  '&:last-child': {
+    borderLeft: 'none',
+  },
 });
 
 const TableHeaderCell = styled(TableCell)({
   fontWeight: 'bold',
-  textAlign :'center',
+  textAlign: 'center',
   backgroundColor: '#ffffff',
   borderTop: '1px solid #ddd',
   borderBottom: '1px solid #ddd',
+});
+
+const ActionItems = styled('div')({
+  visibility: 'hidden',
+  opacity: 0,
+  transition: 'opacity 0.3s',
+  position: 'absolute',
+  right: '10px',
+  top: '50%',
+  transform: 'translateY(-50%)',
+  display: 'flex',
+  alignItems: 'center',
 });
 
 const GreetingComponent = ({ firstName, lastName }) => {
@@ -155,9 +192,9 @@ function EmployeeTable() {
         if (reply && reply.success) {
           const employees = reply.result.filter(user => user.role === 'intern');
           setEmployees(employees);
-          enqueueSnackbar("Employees Loaded Successfully!", { variant: 'success' });
+          enqueueSnackbar("Interns Loaded Successfully!", { variant: 'success' });
         } else {
-          enqueueSnackbar(reply.message || "Failed to fetch employees", { variant: 'error' });
+          enqueueSnackbar(reply.message || "Failed to fetch interns.", { variant: 'error' });
         }
       } catch (error) {
         enqueueSnackbar("API error: " + error.message, { variant: 'error' });
@@ -169,13 +206,31 @@ function EmployeeTable() {
 
   const renderEmptyRows = (count) => {
     return Array.from({ length: count }, (_, index) => (
-      <TableRow key={`empty-${index}`}>
+      <TableRow key={`empty-${index}`} className="emptyRow">
         <TableCell colSpan="2">&nbsp;</TableCell>
       </TableRow>
     ));
   };
 
   const emptyRowsCount = Math.max(0, minimumRowsCount - employees.length);
+
+  const renderRowInfo = (employee, index) => {
+    return (
+      <TableRow key={index}>
+        <TableCell>
+          {employee.firstName.charAt(0).toUpperCase() + employee.firstName.slice(1)} {employee.lastName.charAt(0).toUpperCase() + employee.lastName.slice(1)}
+        </TableCell>
+        <TableCell>
+          {employee.internID}
+        </TableCell>
+        <ActionItems className="action-items">
+          <IconButton size="small">
+            <MenuIcon />
+          </IconButton>
+        </ActionItems>
+      </TableRow>
+    );
+  };
 
   return (
     <Table>
@@ -186,9 +241,7 @@ function EmployeeTable() {
       </TableHead>
       <tbody>
         {employees.map((employee, index) => (
-          <TableRow key={index}>
-            <TableCell>{employee.firstName} {employee.lastName}</TableCell>
-          </TableRow>
+          renderRowInfo(employee, index)
         ))}
         {renderEmptyRows(emptyRowsCount)}
       </tbody>
