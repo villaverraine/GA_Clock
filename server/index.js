@@ -5,6 +5,7 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const uri = process.env.MONGO_URI;
 const secretKey = process.env.SECRET_KEY;
+const bcrypt = require('bcrypt');
 
 async function startApp() {
     const port = process.env.PORT;
@@ -153,52 +154,56 @@ async function startApp() {
 
   app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
-    const user = await db.collection('users').findOne({username: username, password: password});
-    
-    if(user) {
-      const token = jwt.sign({ username }, secretKey, {expiresIn: '24h'});
-      res.status(200).json({ success:true, message:"Success Token", result: {profile: user, token: token}});
+    const user = await db.collection('users').findOne({ username: username });
+  
+    if (user && await bcrypt.compare(password, user.password)) {
+      const token = jwt.sign({ username }, secretKey, { expiresIn: '24h' });
+      res.status(200).json({ success: true, message: "Success Token", result: { profile: user, token: token } });
       console.log("User Found.");
       console.log(user);
       console.log(token);
     } else {
-      res.status(401).json({success:false, message:"Access Denied"});
+      res.status(401).json({ success: false, message: "Access Denied" });
     }
   });
 
+  const saltRounds = 10;
+  
   app.post('/api/register', async (req, res) => {
     const { firstName, lastName, username, password, email, internID, role, timeRendered, timeRequired } = req.body;
-
-    if(!(firstName && lastName && username && email && password && internID && role && timeRendered && timeRequired)){
-        res.status(400).send('All inputs are required.');
-        return;
+  
+    if (!(firstName && lastName && username && email && password && internID && role && timeRendered && timeRequired)) {
+      res.status(400).send('All inputs are required.');
+      return;
     }
-
-    const userCheck = await db.collection('users').findOne({username: username});
-
-    if(userCheck){
-        res.status(409).send('User Already Exist.');
-        return;
+  
+    const userCheck = await db.collection('users').findOne({ username: username });
+  
+    if (userCheck) {
+      res.status(409).send('User Already Exist.');
+      return;
     }
-
+  
     try {
-        const result = await db.collection('users').insertOne({
-            firstName: firstName, 
-            lastName: lastName, 
-            username: username, 
-            password: password, 
-            email: email, 
-            internID: internID, 
-            role: role, 
-            timeRendered: timeRendered, 
-            timeRequired: timeRequired
-        });
-        res.json({success: true, message: "create succeeded.", result: result});
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+  
+      const result = await db.collection('users').insertOne({
+        firstName: firstName,
+        lastName: lastName,
+        username: username,
+        password: hashedPassword,
+        email: email,
+        internID: internID,
+        role: role,
+        timeRendered: timeRendered,
+        timeRequired: timeRequired
+      });
+      res.json({ success: true, message: "create succeeded.", result: result });
     } catch (error) {
-        console.error(error);
-        res.json({success: false, message: "create failed."});
+      console.error(error);
+      res.json({ success: false, message: "create failed." });
     }
-});
+  });
 
 app.post('/api/total-time/:userId', async (req, res) => {
   const { userId } = req.params;
