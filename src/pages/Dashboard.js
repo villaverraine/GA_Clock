@@ -144,7 +144,7 @@ const CalendarContainer = styled('div')({
 });
 
 const CalendarStyled = styled(Calendar)({
-  fontSize: '1.5vw',
+  fontSize: '1.2vw',
   width: '100%',
   maxWidth: '90vw',
   boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
@@ -173,9 +173,11 @@ const ClockDiv = styled('div')({
   boxSizing: 'border-box',
   overflow: 'hidden',
   boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
+  overflow: 'auto',
 });
 
 const AmpmSpan = styled('span')({
+  paddingTop: '50px',
   fontSize: '4vw',
   fontWeight: 'bold',
   whiteSpace: 'nowrap',
@@ -263,7 +265,7 @@ function DashboardPage() {
     const totalHours = Math.floor(totalMinutes / 60);
     const remainingMinutes = totalMinutes % 60;
 
-    return totalMinutes; // Return total minutes directly
+    return totalMinutes; 
   };
 
   const { ampm, currentTime } = formatTime(time);
