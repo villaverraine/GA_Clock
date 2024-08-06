@@ -1,4 +1,4 @@
-##Instructions to run for developers:\
+## Instructions to run for developers:
 1. Go into the server directory to run the API server.\
 ```
 cd server
