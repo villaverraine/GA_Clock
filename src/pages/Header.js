@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
+import { useUser } from '../components/UserContext';
 
 const Header = styled('div')({
     height: '10vh',
@@ -81,6 +82,7 @@ const UserIcon = styled(PersonIcon)({
 function HeaderComponent({ onProfileClick }) {
     const navigate = useNavigate();
     const location = useLocation();
+    const { user } = useUser();
 
     const isActive = (path) => location.pathname === path;
 
@@ -111,7 +113,7 @@ function HeaderComponent({ onProfileClick }) {
                     onClick={onProfileClick}
                 >
                     <UserIcon/>
-                    Username {/*PLACEHOLDER*/}
+                    {user.profile.firstName}
                 </UserButton>
             </ButtonContainer>
         </Header>
