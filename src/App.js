@@ -6,15 +6,15 @@ import {
 import { SnackbarProvider } from 'notistack';
 import { UserProvider } from './components/UserContext';
 
-
 import Login from './pages/Login';
+import ProtectedRoute from './components/ProtectedRoute';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import ForgetPass from './pages/ForgetPass';
 import Admin from './pages/AdminDashboard';
 import Profile from './pages/Profile'
 
-const router = createBrowserRouter ([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <Login/>,
@@ -33,7 +33,11 @@ const router = createBrowserRouter ([
   },
   {
     path: "/admin",
-    element: <Admin/>,
+    element: (
+      <ProtectedRoute allowedRoles={['admin']}>
+        <Admin />
+      </ProtectedRoute>
+    )
   },
   {
     path: "/profile",
