@@ -28,6 +28,7 @@ const LeftSide = styled('div')({
 });
 
 const GreetingDiv = styled('div')({
+  borderRadius: '10px',
   backgroundColor: '#FDFDFD', 
   padding: '2vh',
   paddingBottom: '5vh',
@@ -47,6 +48,36 @@ const RightSide = styled('div')({
   alignItems: 'center',
   padding: '20px', 
   boxSizing: 'border-box',
+});
+
+const AdminCalendarContainer = styled('div')({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  //marginLeft:'114px',
+  height: '73vh',
+  maxHeight: '1300px',
+});
+
+const AdminCalendarStyled = styled(Calendar)({
+  fontSize: '1.5vw',
+  width: '100%',
+  maxWidth: '90vw',
+  boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
+  //borderRadius: '10px',
+  border: 'none',
+  height: '100%', 
+  maxHeight: '100%',
+  padding: '20px',
+  //paddingBottom: '22vh',
+  '& .react-calendar__navigation button': {
+    fontSize: '1.5vw', 
+    //width: 'vw', 
+    //height: '2vw', 
+  },
+  '& .react-calendar__month-view__days__day': {
+    padding: '2.2vw', 
+  },
 });
 
 const Table = styled('table')({
@@ -92,13 +123,13 @@ const AdminCalendar = () => {
   const [date, setDate] = useState(new Date());
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
-      <Calendar
+    <AdminCalendarContainer>
+      <AdminCalendarStyled
         onChange={setDate}
         value={date}
         className="calendar"
       />
-    </div>
+    </AdminCalendarContainer>
   );
 };
 

@@ -95,72 +95,82 @@ const MainContent = styled('div')({
   flex: 1,
   overflow: 'auto',
   justifyContent: 'center',
-  alignItems: 'center',
+  //alignItems: 'center',
 });
 
 const MainDiv = styled('div')({
   display: 'flex',
   flexDirection: 'row',
-  width: '90%',
-  height: '80vh',
+  width: '100%',
+  height: '100%',
+  //height: '80vh',
   // backgroundColor: '#F3F3F3',
   // borderRadius: '10px',
   // boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
-  padding: '20px',
+  //padding: '5px',
   boxSizing: 'border-box',
   justifyContent: 'space-between',
 });
 
 const LeftSide = styled('div')({
-  marginTop: '90px',
-  width: '50%',
-  padding: '20px',
+  width: '50%', 
+  backgroundColor: '#F3F3F3', 
+  padding: '20px', 
   boxSizing: 'border-box',
-  textAlign: 'center',
   
 });
 
 const GreetingDiv = styled('div')({
-  backgroundColor: '#FDFDFD',
+  borderRadius: '10px',
+  backgroundColor: '#FDFDFD', 
   padding: '2vh',
   paddingBottom: '5vh',
   marginBottom: '20px',
   fontSize: '3vh',
   boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
-  textAlign: 'center',
-  fontStyle: 'italic',
-  letterSpacing: '4px',
-  width: '100%', 
+  textAlign: "left",
+  fontStyle: 'italic', 
+  letterSpacing: '4px', 
+});
+
+const RightSide = styled('div')({
+  width: '50%', 
+  backgroundColor: '#F3F3F3', 
+  display: 'flex', 
+  justifyContent: 'center', 
+  alignItems: 'center',
+  padding: '20px', 
   boxSizing: 'border-box',
-  borderRadius: '8px',
-  marginLeft:'163px'
 });
 
 const CalendarContainer = styled('div')({
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
-  marginLeft:'163px'
+  //marginLeft:'114px',
+  height: '73vh',
+  maxHeight: '1230px',
 });
 
 const CalendarStyled = styled(Calendar)({
+  fontSize: '1.5vw',
   width: '100%',
-  maxWidth: '800px',
+  maxWidth: '90vw',
   boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
-  borderRadius: '8px',
+  borderRadius: '10px',
   border: 'none',
-  height: 'auto', 
-  minHeight: '384px', 
-});
-
-const RightSide = styled('div')({
-  width: '50%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
+  height: '100%', 
   padding: '20px',
-  boxSizing: 'border-box',
-  
+  //maxHeight: '100%',
+  //paddingBottom: '22vh',
+  '& .react-calendar__navigation button': {
+    fontSize: '1.5vw', 
+    //width: 'vw', 
+    //height: '2vw', 
+  },
+  '& .react-calendar__month-view__days__day': {
+    padding: '2.2vw', 
+  },
 });
 
 const ClockDiv = styled('div')({
@@ -171,8 +181,10 @@ const ClockDiv = styled('div')({
   backgroundColor: '#FDFDFD',
   borderRadius: '10px',
   padding: '20px',
-  height: '700px',
-  width: '460px',
+  //height: '700px',
+  //width: '460px',
+  width: '100%',
+  height: '100%',
   boxSizing: 'border-box',
   overflow: 'hidden',
   boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
@@ -192,6 +204,7 @@ const TimeDiv = styled('div')({
 
 const SubmitButton = styled('button')({
   marginTop: '20px',
+  marginBottom: '20px',
   padding: '10px 20px',
   fontSize: '16px',
   fontWeight: 'bold',
