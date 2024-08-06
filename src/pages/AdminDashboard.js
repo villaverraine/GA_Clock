@@ -83,6 +83,17 @@ const AdminCalendarStyled = styled(Calendar)({
   },
 });
 
+
+const TableContainer = styled('div')({
+  width: '100%',
+  maxHeight: '100%', // Set your desired max height here
+  overflowY: 'auto',
+  borderRadius: '10px',
+  boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
+  border: '1px solid #ddd',
+  backgroundColor: '#ffffff',
+});
+
 const Table = styled('table')({
   borderRadius: '10px',
   backgroundColor: '#ffffff',
@@ -100,6 +111,7 @@ const TableHead = styled('thead')({
 
 const TableRow = styled('tr')({
   position: 'relative',
+  height: 'auto',
   '&:hover .action-items': {
     visibility: 'visible',
     opacity: 1
@@ -119,6 +131,8 @@ const TableCell = styled('td')({
   padding: '12px 20px',
   border: '1px solid #ddd',
   textAlign: 'left',
+  height: 'auto',
+  whiteSpace: 'nowrap',
   '&:first-child': {
     borderRight: 'none',
   },
@@ -178,7 +192,7 @@ function EmployeeTable() {
   const [modalOpen, setModalOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useUser();
-  const minimumRowsCount = 10; // Minimum number of rows to display
+  const minimumRowsCount = 20; // Minimum number of rows to display
 
   useEffect(() => {
     fetchEmployees();
@@ -282,31 +296,31 @@ function EmployeeTable() {
   };
 
   return (
-    <>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableHeaderCell colSpan="4">
-              Employees
-            </TableHeaderCell>
-          </TableRow>
-        </TableHead>
-        <tbody>
-          {employees.map((employee, index) => (
-            renderRowInfo(employee, index)
-          ))}
-          {renderEmptyRows(emptyRowsCount)}
-        </tbody>
-      </Table>
-      {selectedEmployee && (
-        <EditEmployeeModal
-          open={modalOpen}
-          onClose={() => setModalOpen(false)}
-          employee={selectedEmployee}
-          onSave={handleSave}
-        />
-      )}
-    </>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableHeaderCell colSpan="4">
+                Employees
+              </TableHeaderCell>
+            </TableRow>
+          </TableHead>
+          <tbody>
+            {employees.map((employee, index) => (
+              renderRowInfo(employee, index)
+            ))}
+            {renderEmptyRows(emptyRowsCount)}
+          </tbody>
+        </Table>
+        {selectedEmployee && (
+          <EditEmployeeModal
+            open={modalOpen}
+            onClose={() => setModalOpen(false)}
+            employee={selectedEmployee}
+            onSave={handleSave}
+          />
+        )}
+      </TableContainer>
   );
 }
 
