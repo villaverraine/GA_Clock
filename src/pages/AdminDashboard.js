@@ -181,7 +181,10 @@ function EmployeeTable() {
   const minimumRowsCount = 10; // Minimum number of rows to display
 
   useEffect(() => {
-    const fetchEmployees = async () => { 
+    fetchEmployees();
+  }, [enqueueSnackbar, user.token]);
+
+  const fetchEmployees = async () => { 
       try {
         const response = await fetch('http://localhost:3001/api/search/users', {
           method: 'POST',
@@ -196,28 +199,55 @@ function EmployeeTable() {
         if (reply && reply.success) {
           const employees = reply.result.filter(user => user.role === 'intern');
           setEmployees(employees);
-          enqueueSnackbar("Interns Loaded Successfully!", { variant: 'success' });
+          // uncomment for developer debugging
+          // enqueueSnackbar("Interns Loaded Successfully!", { variant: 'success' });
+          console.log("Interns Loaded Successfully!")
         } else {
           enqueueSnackbar(reply.message || "Failed to fetch interns.", { variant: 'error' });
+          console.err("API error")
         }
       } catch (error) {
         enqueueSnackbar("API error: " + error.message, { variant: 'error' });
+        console.err("API error: " + error.message)
       }
     };
-
-    fetchEmployees();
-  }, [enqueueSnackbar, user.token]);
 
   const handleEditClick = (employee) => {
     setSelectedEmployee(employee);
     setModalOpen(true);
   };
 
-  const handleSave = (updatedEmployee) => {
-    // Update employee logic here (e.g., make an API call)
-    setEmployees(employees.map(emp =>
-      emp.id === updatedEmployee.id ? updatedEmployee : emp
-    ));
+  const handleSave = async (updatedEmployee) => {
+    const payload = {
+      username: updatedEmployee.username,
+      firstName: updatedEmployee.firstName,
+      lastName: updatedEmployee.lastName,
+      password: updatedEmployee.password
+    };
+    
+    try {
+      const response = await fetch(`http://localhost:3001/api/update/users/${updatedEmployee._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'access_token': user.token 
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        enqueueSnackbar("Profile Updated Successfully!", { variant: 'success' });
+        console.log('Employee updated successfully:', result);
+        fetchEmployees();
+      } else {
+        enqueueSnackbar(result.message || 'Failed to update profile', { variant: 'error' });
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      enqueueSnackbar('Error updating profile', { variant: 'error' });
+    }
   };
 
   const renderEmptyRows = (count) => {
