@@ -51,7 +51,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/registration",
-    element: <Registration/>,
+    element: (
+      <ProtectedRoute allowedRoles={['admin']}>
+        <Registration />,
+      </ProtectedRoute>
+    )
   },
 ]);
 
