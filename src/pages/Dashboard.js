@@ -10,7 +10,6 @@ import { useUser } from '../components/UserContext';
 import { useSnackbar } from 'notistack'; 
 import ProfileFloatingDiv from './Profile';
 
-// import { AppContext } from '../components/AppContext';
 const schema = {
   type: 'object',
   properties: {
@@ -95,7 +94,6 @@ const MainContent = styled('div')({
   flex: 1,
   overflow: 'auto',
   justifyContent: 'center',
-  //alignItems: 'center',
 });
 
 const MainDiv = styled('div')({
@@ -103,11 +101,6 @@ const MainDiv = styled('div')({
   flexDirection: 'row',
   width: '100%',
   height: '100%',
-  //height: '80vh',
-  // backgroundColor: '#F3F3F3',
-  // borderRadius: '10px',
-  // boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
-  //padding: '5px',
   boxSizing: 'border-box',
   justifyContent: 'space-between',
 });
@@ -117,7 +110,6 @@ const LeftSide = styled('div')({
   backgroundColor: '#F3F3F3', 
   padding: '20px', 
   boxSizing: 'border-box',
-  
 });
 
 const GreetingDiv = styled('div')({
@@ -147,7 +139,6 @@ const CalendarContainer = styled('div')({
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
-  //marginLeft:'114px',
   height: '73vh',
   maxHeight: '1230px',
 });
@@ -161,12 +152,8 @@ const CalendarStyled = styled(Calendar)({
   border: 'none',
   height: '100%', 
   padding: '20px',
-  //maxHeight: '100%',
-  //paddingBottom: '22vh',
   '& .react-calendar__navigation button': {
     fontSize: '1.5vw', 
-    //width: 'vw', 
-    //height: '2vw', 
   },
   '& .react-calendar__month-view__days__day': {
     padding: '2.2vw', 
@@ -181,8 +168,6 @@ const ClockDiv = styled('div')({
   backgroundColor: '#FDFDFD',
   borderRadius: '10px',
   padding: '20px',
-  //height: '700px',
-  //width: '460px',
   width: '100%',
   height: '100%',
   boxSizing: 'border-box',
@@ -220,13 +205,12 @@ const SubmitButton = styled('button')({
 });
 
 const GreetingComponent = ({ firstName, lastName }) => {
-  return <GreetingDiv>WELCOME BACK {firstName} {lastName}!</GreetingDiv>;
+  return <GreetingDiv>WELCOME BACK {firstName} {lastName}!</GreetingDiv>; 
 };
 
 function DashboardPage() {
-  const { user } = useUser(); // Use user context to get user info
+  const { user } = useUser(); 
   const { enqueueSnackbar } = useSnackbar(); 
-  // const appContext = useContext(AppContext);
   const [time, setTime] = useState(new Date());
   const [data, setData] = useState({
     date: new Date().toLocaleDateString('en-CA'),
@@ -236,14 +220,12 @@ function DashboardPage() {
     timeOutPM: '',
     timeRendered: ''
   });
-  
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       setTime(new Date());
     }, 1000);
-    // for (i in appContext) {
-    //   console.log(i, appContext[i]);
-    // }
     return () => clearInterval(intervalId);
   }, []);
 
@@ -254,7 +236,7 @@ function DashboardPage() {
     const ampm = hours >= 12 ? 'PM' : 'AM';
 
     hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
+    hours = hours ? hours : 12; 
 
     const currentTime = `${hours}:${minutes}:${seconds}`;
 
@@ -281,14 +263,53 @@ function DashboardPage() {
     const totalHours = Math.floor(totalMinutes / 60);
     const remainingMinutes = totalMinutes % 60;
 
-    return `${totalHours}:${remainingMinutes}`;
+    return totalMinutes; // Return total minutes directly
   };
 
   const { ampm, currentTime } = formatTime(time);
 
   const handleChange = ({ data }) => {
-    const timeRendered = calculateTotalHours(data.timeInAM, data.timeOutAM, data.timeInPM, data.timeOutPM);
+    const totalMinutes = calculateTotalHours(data.timeInAM, data.timeOutAM, data.timeInPM, data.timeOutPM);
+    const totalHours = Math.floor(totalMinutes / 60);
+    const remainingMinutes = totalMinutes % 60;
+    const timeRendered = `${totalHours}:${remainingMinutes}`;
     setData({ ...data, timeRendered });
+  };
+
+  const updateTotalTimeRendered = async () => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/total-time/${user.profile._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'access_token': user.token
+        }
+      });
+      const result = await response.json();
+
+      const totalMinutes = result.totalTimeRendered;
+      const totalHours = totalMinutes / 60;
+
+      if (response.ok) {
+        enqueueSnackbar('Total time rendered updated successfully!', { variant: 'success' });
+        console.log('Total time rendered:', totalHours);
+        
+        await fetch(`http://localhost:3001/api/update/users/${user.profile._id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'access_token': user.token
+          },
+          body: JSON.stringify({ timeRendered: totalHours })
+        });
+
+      } else {
+        enqueueSnackbar(result.message || 'Failed to update total time rendered', { variant: 'error' });
+      }
+    } catch (error) {
+      console.error('Error updating total time rendered:', error);
+      enqueueSnackbar('Error updating total time rendered', { variant: 'error' });
+    }
   };
 
   const handleSubmit = async () => {
@@ -319,6 +340,7 @@ function DashboardPage() {
 
       if (response.ok) {
         enqueueSnackbar('Time data submitted successfully!', { variant: 'success' });
+        updateTotalTimeRendered(); 
       } else {
         enqueueSnackbar(result.message || 'Failed to submit time data', { variant: 'error' });
       }
@@ -328,7 +350,6 @@ function DashboardPage() {
     }
   };
 
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const toggleProfile = () => {
     setIsProfileOpen(!isProfileOpen);
   };

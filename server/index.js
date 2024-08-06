@@ -69,29 +69,29 @@ async function startApp() {
   });
 
   app.post('/api/update/:modelName/:id', verifyToken, async (req, res) => {
-      const { modelName, id } = req.params;
-      let updates = req.body;
-
-      if (!ObjectId.isValid(id)) {
-          return res.status(400).send('Invalid ID format');
-      }
-
-      try {
-          delete updates._id;
-          const result = await db.collection(modelName).updateOne(
-              { _id: new ObjectId(id) },
-              { $set: updates }
-          );
-
-          if (result.matchedCount === 0) {
-              return res.status(404).send('Document not found');
-          }
-
-          res.json({ success: true, message: "success update", result: result });
-      } catch (error) {
-          console.error(error);
-          res.json({ success: false, message: "update error", error: error.message });
-      }
+    const { modelName, id } = req.params;
+    let updates = req.body;
+  
+    if (!ObjectId.isValid(id)) {
+        return res.status(400).send('Invalid ID format');
+    }
+  
+    try {
+        delete updates._id;
+        const result = await db.collection(modelName).updateOne(
+            { _id: new ObjectId(id) },
+            { $set: updates }
+        );
+  
+        if (result.matchedCount === 0) {
+            return res.status(404).send('Document not found');
+        }
+  
+        res.json({ success: true, message: "success update", result: result });
+    } catch (error) {
+        console.error(error);
+        res.json({ success: false, message: "update error", error: error.message });
+    }
   });
 
   app.post('/api/search/:modelName', verifyToken, async (req, res) => {
@@ -198,6 +198,21 @@ async function startApp() {
         console.error(error);
         res.json({success: false, message: "create failed."});
     }
+});
+
+app.post('/api/total-time/:userId', async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const timeEntries = await db.collection('time').find({ userID: userId }).toArray();
+    let totalMinutes = 0;
+    timeEntries.forEach(entry => {
+      const [hours, minutes] = entry.timeRendered.split(':').map(Number);
+      totalMinutes += (hours * 60) + minutes;
+    });
+    res.json({ success: true, totalTimeRendered: totalMinutes });
+  } catch (error) {
+    res.status(500).send('Error calculating time rendered.');
+  }
 });
 
 
