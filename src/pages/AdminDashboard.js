@@ -153,7 +153,7 @@ function EmployeeTable() {
         const reply = await response.json();
 
         if (reply && reply.success) {
-          const employees = reply.result.filter(user => user.role === 'employee');
+          const employees = reply.result.filter(user => user.role === 'intern');
           setEmployees(employees);
           enqueueSnackbar("Employees Loaded Successfully!", { variant: 'success' });
         } else {
