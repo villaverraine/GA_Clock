@@ -1,17 +1,24 @@
 .react-calendar__tile--active {
-    background: red; /* Change the background color to red */
-    color: white; /* Change text color for better visibility */
-    border-radius: 100%; /* Make the highlight circular */
-    display: flex; /* Use flexbox to center content */
-    align-items: center; /* Center vertically */
-    justify-content: center; /* Center horizontally */
-    box-sizing: border-box; /* Include padding in the element's total width and height */
-    position: relative; /* Position relative for possible pseudo-element usage */
+    background: red; 
+    color: white; 
+    border-radius: 100%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    box-sizing: border-box; 
+    position: relative; 
 }
 
 .react-calendar__tile--active:enabled:hover {
-    background: darkred; /* Optional: Change color on hover */
+    font-size: 1.5vw;
+    background: darkred; 
 }
+
+.react-calendar__navigation button {
+    font-size: 1.5vw; 
+    width: 1.5vw; 
+    height: 1.5vw; 
+  }
 
 .calendar {
     box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2);
