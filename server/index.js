@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const uri = process.env.MONGO_URI;
 const secretKey = process.env.SECRET_KEY;
 const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 async function startApp() {
     const port = process.env.PORT;
@@ -39,7 +40,7 @@ async function startApp() {
       }
       const token = req.headers['access_token'];
   
-      console.log('Received token:', token);
+      // console.log('Received token:', token);
   
       if (!token) {
           return res.status(403).send("A token is required for authentication");
@@ -48,7 +49,7 @@ async function startApp() {
       try {
           const decoded = jwt.verify(token, secretKey);
           req.user = decoded;
-          console.log('Decoded token:', decoded);
+          // console.log('Decoded token:', decoded);
       } catch (err) {
           console.error('Token verification failed:', err);
           return res.status(401).send("Invalid Token");
@@ -78,6 +79,26 @@ async function startApp() {
     }
   
     try {
+      if (modelName === 'users' && updates.password) {
+        
+        // Fetch the selected user data
+        const currentUser = await db.collection(modelName).findOne({ _id: new ObjectId(id) });
+        if (!currentUser) {
+          return res.status(404).send('User not found');
+        }
+
+        // Check if the new password is different from the current password
+        const isSamePassword = await bcrypt.compare(updates.password, currentUser.password);
+        if (!isSamePassword) {
+          // Hash the new password
+          updates.password = await bcrypt.hash(updates.password, saltRounds);
+          // Commented for dev debugging
+          // console.log("!!!!!!!!!New Hashed Password: " + updates.password)
+        } else {
+          // If the password hasn't changed, remove it from updates
+          delete updates.password;
+        }
+      }
         delete updates._id;
         const result = await db.collection(modelName).updateOne(
             { _id: new ObjectId(id) },
@@ -148,15 +169,15 @@ async function startApp() {
     if (user && await bcrypt.compare(password, user.password)) {
       const token = jwt.sign({ username }, secretKey, { expiresIn: '24h' });
       res.status(200).json({ success: true, message: "Success Token", result: { profile: user, token: token } });
-      console.log("User Found.");
-      console.log(user);
-      console.log(token);
+      // console.log("User Found.");
+      // console.log(user);
+      // console.log(token);
     } else {
       res.status(401).json({ success: false, message: "Access Denied" });
     }
   });
 
-  const saltRounds = 10;
+  
   
   app.post('/api/register', async (req, res) => {
     const { firstName, lastName, username, password, email, internID, role, timeRendered, timeRequired } = req.body;
