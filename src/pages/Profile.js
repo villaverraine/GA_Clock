@@ -1,6 +1,8 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../components/UserContext';
 
 const Overlay = styled('div')({
   position: 'fixed',
@@ -43,15 +45,6 @@ const ProfileCloseButton = styled('button')({
   fontSize: '18px',
 });
 
-const ProfileLogo = styled('img')({
-  width: '150px', 
-  height: '150px', 
-  objectFit: 'cover', 
-  borderRadius: '50%',
-  boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
-  marginBottom: '10px',
-});
-
 const ProfileDetails = styled('div')({
   display: 'flex',
   flexDirection: 'column',
@@ -67,35 +60,62 @@ const ProfileInfo = styled('div')({
   alignSelf: 'stretch',
 });
 
-const Profile = ({ user, onClose }) => {
-    if (!user) return null;
+const LogoutButton = styled('button')({
+  marginTop: '10px',
+  backgroundColor: '#F44336',
+  color: '#FFF',
+  border: 'none',
+  borderRadius: '5px',
+  padding: '10px 20px',
+  cursor: 'pointer',
+  fontSize: '16px',
+  ':hover': {
+    backgroundColor: '#D32F2F',
+  },
+});
 
-    return (
-        <>
-        <Overlay onClick={onClose} />
-        <ProfileContainer>
-            <ProfileCloseButton onClick={onClose}>x</ProfileCloseButton>
-            <ProfileDetails>
-            <ProfileLogo src={user.profile.photoUrl} alt="Logo" /> 
-            <Typography variant="h6">{user.profile.firstName} {user.profile.lastName}</Typography>
-            <Typography variant="body1"><strong>Intern ID: </strong>{user.profile._id}</Typography>
-            </ProfileDetails>
-            <ProfileInfo>
+const Profile = ({ user, onClose }) => {
+  const navigate = useNavigate();
+  const { clearUser } = useUser();
+
+  const handleLogout = () => {
+    clearUser();
+    navigate('/');
+  };
+
+  if (!user) return null;
+
+  return (
+    <>
+      <Overlay onClick={onClose} />
+      <ProfileContainer>
+        <ProfileCloseButton onClick={onClose}>x</ProfileCloseButton>
+        <ProfileDetails>
+          <Typography variant="h6">{user.profile.firstName} {user.profile.lastName}</Typography>
+        </ProfileDetails>
+        <ProfileInfo>
+          <Typography variant="body1">
+            <strong>Username: </strong>
+            {user.profile.username}
+          </Typography>
+          <Typography variant="body1">
+            <strong>Email: </strong>
+            {user.profile.email}
+          </Typography>
+          <Typography variant="body1">
+            <strong>Role: </strong>
+            {user.profile.role}
+          </Typography>
+          {user.profile.role === 'intern' && (
             <Typography variant="body1">
-                <strong>Username: </strong>
-                {user.profile.username}
+              <strong>Intern ID: </strong>
+              {user.profile.internID}
             </Typography>
-            <Typography variant="body1">
-                <strong>Email: </strong>
-                {user.profile.email}
-            </Typography>
-            <Typography variant="body1">
-                <strong>Role: </strong>
-                {user.profile.role}
-            </Typography>
-            </ProfileInfo>
-        </ProfileContainer>
-        </>
+          )}
+        </ProfileInfo>
+        <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+      </ProfileContainer>
+    </>
   );
 };
 
