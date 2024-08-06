@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Header from './Header';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/CalendarStyles.css';
-import { useSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack'; // Make sure this import is included
 import { useUser } from '../components/UserContext';
 import ProfileFloatingDiv from './Profile'
 
@@ -97,18 +97,37 @@ const TableTitle = styled('h2')({
 });
 
 function AttendanceLogsTable() {
-    const [attendanceLogs, setAttendanceLogs] = useState([
-        // Sample data
-        { date: '2024-07-01', timeInAM: '08:00:00', timeOutAM: '12:00:00', timeInPM: '13:00:00', timeOutPM: '17:00:00' },
-        { date: '2024-07-15', timeInAM: '09:00:00', timeOutAM: '12:30:00', timeInPM: '13:30:00', timeOutPM: '18:00:00' },
-        { date: '2024-08-01', timeInAM: '08:00:00', timeOutAM: '12:00:00', timeInPM: '13:00:00', timeOutPM: '17:00:00' },
-        { date: '2024-08-02', timeInAM: '09:00:00', timeOutAM: '12:30:00', timeInPM: '14:00:00', timeOutPM: '18:00:00' },
-        { date: '2024-09-01', timeInAM: '07:30:00', timeOutAM: '12:00:00', timeInPM: '13:00:00', timeOutPM: '16:30:00' },
-        { date: '2024-09-10', timeInAM: '08:00:00', timeOutAM: '11:00:00', timeInPM: '12:00:00', timeOutPM: '17:00:00' },
-        { date: '2024-09-20', timeInAM: '09:00:00', timeOutAM: '12:30:00', timeInPM: '13:00:00', timeOutPM: '18:00:00' },
-    ]);
-    const [currentMonth, setCurrentMonth] = useState(new Date());
+    const [attendanceLogs, setAttendanceLogs] = useState([]);
     const { enqueueSnackbar } = useSnackbar();
+    const { user } = useUser();
+    const [currentMonth, setCurrentMonth] = useState(new Date());
+
+    useEffect(() => {
+        const fetchAttendanceLogs = async () => {
+            try {
+                const response = await fetch('http://localhost:3001/api/search/time', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'access_token': user.token
+                    },
+                    body: JSON.stringify({}),
+                });
+                const reply = await response.json();
+
+                if (reply && reply.success) {
+                    setAttendanceLogs(reply.result);
+                    enqueueSnackbar("Attendance logs loaded successfully!", { variant: 'success' });
+                } else {
+                    enqueueSnackbar(reply.message || "Failed to fetch attendance logs", { variant: 'error' });
+                }
+            } catch (error) {
+                enqueueSnackbar("API error: " + error.message, { variant: 'error' });
+            }
+        };
+
+        fetchAttendanceLogs();
+    }, [enqueueSnackbar, user.token]);
 
     const calculateTotalHours = (timeIn, timeOut) => {
         const inTime = new Date(`1970-01-01T${timeIn}Z`);
@@ -161,7 +180,7 @@ function AttendanceLogsTable() {
     const currentMonthKey = `${currentMonth.getFullYear()}-${currentMonth.getMonth() + 1}`.padStart(7, '0');
     const logsToDisplay = groupedLogs[currentMonthKey] || [];
 
-    
+
     return (
         <MainDiv>
             <TableTitle>Daily Time Record</TableTitle>
@@ -228,12 +247,12 @@ function AttendanceLogsPage() {
     const { user } = useUser();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const toggleProfile = () => {
-      setIsProfileOpen(!isProfileOpen);
+        setIsProfileOpen(!isProfileOpen);
     };
 
     return (
         <PageContainer>
-            <Header onProfileClick={toggleProfile}/>
+            <Header onProfileClick={toggleProfile} />
             <MainContent>
                 <AttendanceLogsTable />
             </MainContent>
