@@ -5,7 +5,7 @@ import 'react-calendar/dist/Calendar.css';
 import '../styles/CalendarStyles.css';
 import { useSnackbar } from 'notistack'; // Make sure this import is included
 import { useUser } from '../components/UserContext';
-import ProfileFloatingDiv from './Profile'
+import ProfileFloatingDiv from './Profile';
 
 const PageContainer = styled('div')({
     display: 'flex',
@@ -116,10 +116,14 @@ function AttendanceLogsTable() {
                 const reply = await response.json();
 
                 if (reply && reply.success) {
-                    // Filter logs by userID
-                    const userLogs = reply.result.filter(log => log.userID === user.id);
-                    setAttendanceLogs(userLogs);
-                    enqueueSnackbar("Attendance logs loaded successfully!", { variant: 'success' });
+                    if (user.profile && user.profile._id) {
+                        // console.log(user)
+                        const userLogs = reply.result.filter(log => log.userID === user.profile._id);
+                        setAttendanceLogs(userLogs);
+                        enqueueSnackbar("Attendance logs loaded successfully!", { variant: 'success' });
+                    } else {
+                        enqueueSnackbar("User ID is not defined", { variant: 'error' });
+                    }
                 } else {
                     enqueueSnackbar(reply.message || "Failed to fetch attendance logs", { variant: 'error' });
                 }
@@ -129,7 +133,7 @@ function AttendanceLogsTable() {
         };
 
         fetchAttendanceLogs();
-    }, [enqueueSnackbar, user.token, user.id]);
+    }, [enqueueSnackbar, user.token, user]);
 
     const calculateTotalHours = (timeIn, timeOut) => {
         const inTime = new Date(`1970-01-01T${timeIn}Z`);
@@ -181,7 +185,6 @@ function AttendanceLogsTable() {
     const groupedLogs = groupByMonth(attendanceLogs);
     const currentMonthKey = `${currentMonth.getFullYear()}-${currentMonth.getMonth() + 1}`.padStart(7, '0');
     const logsToDisplay = groupedLogs[currentMonthKey] || [];
-
 
     return (
         <MainDiv>
