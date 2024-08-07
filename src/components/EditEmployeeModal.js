@@ -7,6 +7,7 @@ const EditEmployeeModal = ({ open, onClose, employee, onSave }) => {
   const [username, setUsername] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
@@ -15,12 +16,13 @@ const EditEmployeeModal = ({ open, onClose, employee, onSave }) => {
       setUsername(employee.username);
       setFirstName(employee.firstName);
       setLastName(employee.lastName);
+      setEmail(employee.email)
       setPassword('');
     }
   }, [employee]);
 
   const handleSave = () => {
-    const updatedEmployee = { ...employee, username, firstName, lastName };
+    const updatedEmployee = { ...employee, username, firstName, lastName, email };
 
     if (password !== '') {
       updatedEmployee.password = password;
@@ -35,6 +37,7 @@ const EditEmployeeModal = ({ open, onClose, employee, onSave }) => {
     setUsername(employee ? employee.username : '');
     setFirstName(employee ? employee.firstName : '');
     setLastName(employee ? employee.lastName : '');
+    setEmail(employee ? employee.email : '');
     setPassword('');
     setShowPassword(false);
     onClose();
@@ -83,6 +86,14 @@ const EditEmployeeModal = ({ open, onClose, employee, onSave }) => {
           label="Last Name"
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
+
+        <TextField
+          label="Email Address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           fullWidth
           margin="normal"
         />

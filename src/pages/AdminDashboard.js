@@ -239,6 +239,7 @@ function EmployeeTable() {
       username: updatedEmployee.username,
       firstName: updatedEmployee.firstName,
       lastName: updatedEmployee.lastName,
+      email: updatedEmployee.email,
       password: updatedEmployee.password
     };
     
