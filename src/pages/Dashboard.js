@@ -291,6 +291,7 @@ function DashboardPage() {
 
       const totalMinutes = result.totalTimeRendered;
       const totalHours = totalMinutes / 60;
+      console.log(totalHours)
 
       if (response.ok) {
         enqueueSnackbar('Total time rendered updated successfully!', { variant: 'success' });
