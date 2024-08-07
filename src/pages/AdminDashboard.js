@@ -340,7 +340,7 @@ function AdminDashboardPage() {
       <AdminHeader onProfileClick={toggleProfile} />
       <MainContent>
         <LeftSide>
-          <GreetingComponent firstName={user.profile.firstName} lastName={user.profile.lastName} />
+          <GreetingComponent firstName={user.profile.firstName.charAt(0).toUpperCase() + user.profile.firstName.slice(1)} lastName={user.profile.lastName.charAt(0).toUpperCase() + user.profile.lastName.slice(1)} />
           <AdminCalendar />
         </LeftSide>
         <RightSide>
