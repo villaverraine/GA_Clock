@@ -63,7 +63,7 @@ const AdminCalendarContainer = styled('div')({
 });
 
 const AdminCalendarStyled = styled(Calendar)({
-  fontSize: '1.5vw',
+  fontSize: '1.2vw',
   width: '100%',
   maxWidth: '90vw',
   boxShadow: '0 8px 10px rgba(0, 0, 0, 0.2)',
