@@ -116,7 +116,9 @@ function AttendanceLogsTable() {
                 const reply = await response.json();
 
                 if (reply && reply.success) {
-                    setAttendanceLogs(reply.result);
+                    // Filter logs by userID
+                    const userLogs = reply.result.filter(log => log.userID === user.id);
+                    setAttendanceLogs(userLogs);
                     enqueueSnackbar("Attendance logs loaded successfully!", { variant: 'success' });
                 } else {
                     enqueueSnackbar(reply.message || "Failed to fetch attendance logs", { variant: 'error' });
@@ -127,7 +129,7 @@ function AttendanceLogsTable() {
         };
 
         fetchAttendanceLogs();
-    }, [enqueueSnackbar, user.token]);
+    }, [enqueueSnackbar, user.token, user.id]);
 
     const calculateTotalHours = (timeIn, timeOut) => {
         const inTime = new Date(`1970-01-01T${timeIn}Z`);
