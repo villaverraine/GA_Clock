@@ -1,7 +1,3 @@
-Here's a template for test documentation that you can use for your web app:
-
----
-
 # **Test Documentation**
 
 ## **1. Test Plan**
@@ -18,7 +14,7 @@ Here's a template for test documentation that you can use for your web app:
   - Edit Profile
   - Intern Attendance Logs Visualization
 - **Key UI/UX Components**
-    - Edit Employee Modal
+    - Submission of Time-In and Time-Out
     - Protected/Restricted Routes
 
 ### **1.3 Test Types**
@@ -26,25 +22,17 @@ Here's a template for test documentation that you can use for your web app:
 - Integration Tests
 - End-to-End Tests
 
-### **1.4 Tools Used**
-- **Testing Frameworks**: 
-  - Jest
-  - Selenium
-- **Other Tools**:
-  - React Testing Library
-  - ChromeDriver
-
-### **1.5 Test Environment**
+### **1.4 Test Environment**
 - **Operating System**: macOS Sonoma
 - **Browsers**: 
   - Chrome [127.0.6533.99]
 - **Dependencies**: 
   - Node.js [v20.11.1]
 
-### **1.6 Test Execution**
+### **1.5 Test Execution**
 - **Test Runs**: 
-  - Unit tests executed locally using Jest.
-  - End-to-end tests executed using Selenium with ChromeDriver.
+  - Unit tests executed manually.
+  - End-to-end tests executed manually.
 
 ---
 
@@ -144,7 +132,7 @@ Here's a template for test documentation that you can use for your web app:
 
 ---
 
-### **Test Case ID:** `TC06_Edit_Profile_First_Name_Success`
+### **Test Case ID:** `TC07_Edit_Profile_First_Name_Success`
 
 - **Title**: Edit Intern's First Name
 - **Description**: Admin edits the firstname of the selected intern.
@@ -158,7 +146,7 @@ Here's a template for test documentation that you can use for your web app:
 
 ---
 
-### **Test Case ID:** `TC07_Edit_Profile_Email_Success`
+### **Test Case ID:** `TC08_Edit_Profile_Email_Success`
 
 - **Title**: Edit Intern's Email
 - **Description**: Admin edits the email of the selected intern.
@@ -172,7 +160,7 @@ Here's a template for test documentation that you can use for your web app:
 
 ---
 
-### **Test Case ID:** `TC08_Edit_Profile_First_Name_Success`
+### **Test Case ID:** `TC09_Edit_Profile_First_Name_Success`
 
 - **Title**: Edit Intern's First Name
 - **Description**: Admin edits the first name of the selected intern.
@@ -186,7 +174,7 @@ Here's a template for test documentation that you can use for your web app:
 
 ---
 
-### **Test Case ID:** `TC09_Edit_Profile_Last_Name_Success`
+### **Test Case ID:** `TC10_Edit_Profile_Last_Name_Success`
 
 - **Title**: Edit Intern's Last Name
 - **Description**: Admin edits the last name of the selected intern.
@@ -200,7 +188,7 @@ Here's a template for test documentation that you can use for your web app:
 
 ---
 
-### **Test Case ID:** `TC10_Edit_Profile_Password_Success`
+### **Test Case ID:** `TC11_Edit_Profile_Password_Success`
 
 - **Title**: Edit Intern's Password
 - **Description**: Admin edits the password of the selected intern.
@@ -214,69 +202,238 @@ Here's a template for test documentation that you can use for your web app:
 
 ---
 
+### **Test Case ID:** `TC12_Edit_Profile_Username_Cancel`
 
-## **3. Code Documentation**
-
-### **3.1 Unit Tests**
-#### **File: `Login.test.js`**
-```jsx
-// Test case for Login component
-import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import Login from './Login';
-
-test('submits the username and password', () => {
-  const mockSubmit = jest.fn();
-  const { getByPlaceholderText, getByText } = render(<Login onSubmit={mockSubmit} />);
-
-  fireEvent.change(getByPlaceholderText('Username'), { target: { value: 'testuser' } });
-  fireEvent.change(getByPlaceholderText('Password'), { target: { value: 'password123' } });
-  fireEvent.click(getByText('Login'));
-
-  expect(mockSubmit).toHaveBeenCalledWith({ username: 'testuser', password: 'password123' });
-});
-```
-**Comments**: This test checks that the `Login` component correctly submits the username and password when the login button is clicked.
-
-### **3.2 End-to-End Tests**
-#### **File: `test_login.py`**
-```python
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-import time
-
-# Set up the WebDriver (Chrome in this case)
-driver = webdriver.Chrome()
-
-# Test case for logging in with valid credentials
-driver.get("http://localhost:3000/login")  # Update with your app's URL
-
-username_input = driver.find_element(By.NAME, "username")
-password_input = driver.find_element(By.NAME, "password")
-
-username_input.send_keys("testuser")
-password_input.send_keys("password123")
-password_input.send_keys(Keys.RETURN)
-
-time.sleep(2)
-
-logout_button = driver.find_element(By.ID, "logout")  # Adjust the selector as needed
-
-assert logout_button.is_displayed(), "Login failed!"
-
-driver.quit()
-```
-**Comments**: This Selenium test automates the login process and verifies that the user is logged in by checking the presence of a logout button.
+- **Title**: Cancel Edit Intern's Username
+- **Description**: Admin attempts to edit the username of the selected intern but cancels the action.
+- **Preconditions**: Admin is logged in, and there are registered interns.
+- **Test Steps**:
+  1. Change `test-user` to `testuser` in the Username field.
+  2. Click outside the modal or click the "Cancel" button.
+- **Expected Result**: The modal closes, and the selected intern's username remains as `test-user`.
+- **Actual Result**: The modal closes, and the selected intern's username remains as `test-user`.
+- **Status**: Passed
 
 ---
+
+### **Test Case ID:** `TC13_Edit_Profile_First_Name_Cancel`
+
+- **Title**: Cancel Edit Intern's First Name
+- **Description**: Admin attempts to edit the first name of the selected intern but cancels the action.
+- **Preconditions**: Admin is logged in, and there are registered interns.
+- **Test Steps**:
+  1. Change `test` to `tester` in the First Name field.
+  2. Click outside the modal or click the "Cancel" button.
+- **Expected Result**: The modal closes, and the selected intern's first name remains as `test`.
+- **Actual Result**: The modal closes, and the selected intern's first name remains as `test`.
+- **Status**: Passed
+
+---
+
+### **Test Case ID:** `TC14_Edit_Profile_Email_Cancel`
+
+- **Title**: Cancel Edit Intern's Email
+- **Description**: Admin attempts to edit the email of the selected intern but cancels the action.
+- **Preconditions**: Admin is logged in, and there are registered interns.
+- **Test Steps**:
+  1. Change `test@email.com` to `newemail@example.com` in the Email field.
+  2. Click outside the modal or click the "Cancel" button.
+- **Expected Result**: The modal closes, and the selected intern's email remains as `test@email.com`.
+- **Actual Result**: The modal closes, and the selected intern's email remains as `test@email.com`.
+- **Status**: Passed
+
+---
+
+### **Test Case ID:** `TC15_Edit_Profile_Last_Name_Cancel`
+
+- **Title**: Cancel Edit Intern's Last Name
+- **Description**: Admin attempts to edit the last name of the selected intern but cancels the action.
+- **Preconditions**: Admin is logged in, and there are registered interns.
+- **Test Steps**:
+  1. Change `user` to `updateduser` in the Last Name field.
+  2. Click outside the modal or click the "Cancel" button.
+- **Expected Result**: The modal closes, and the selected intern's last name remains as `user`.
+- **Actual Result**: The modal closes, and the selected intern's last name remains as `user`.
+- **Status**: Passed
+
+---
+
+### **Test Case ID:** `TC16_Edit_Profile_Password_Cancel`
+
+- **Title**: Cancel Edit Intern's Password
+- **Description**: Admin attempts to edit the password of the selected intern but cancels the action.
+- **Preconditions**: Admin is logged in, and there are registered interns.
+- **Test Steps**:
+  1. Enter `newpassword123` in the Password field.
+  2. Click outside the modal or click the "Cancel" button.
+- **Expected Result**: The modal closes, and the selected intern's password remains as `test123`.
+- **Actual Result**: The modal closes, and the selected intern's password remains as `test123`.
+- **Status**: Passed
+
+---
+
+### **Test Case ID:** `TC17_Succesful_Render_Intern_Attendance_Logs`
+
+- **Title**: View The Intern's Own Attendance Logs
+- **Description**: Intern views their attendance logs for the month.
+- **Preconditions**: Intern is logged in and have existing logs in the database for the month.
+- **Test Steps**:
+  1. Click the "Attendance Logs" button.
+- **Expected Result**: User is redirected to their `/logs` and is rendered a table of their time-in/out times with the date and total hours rendered each day.
+- **Actual Result**: User is redirected to their `/logs` and is rendered a table of their time-in/out times with the date and total hours rendered each day.
+- **Status**: Passed
+
+---
+
+### **Test Case ID:** `TC18_Succesful_Error_Message_Intern_Attendance_Logs`
+
+- **Title**: Render Error For Non-Existent Data
+- **Description**: Intern views their attendance logs while not having logged any data for the month.
+- **Preconditions**: Intern is logged in and have no existing logs for the month in the database.
+- **Test Steps**:
+  1. Click the "Attendance Logs" button.
+- **Expected Result**: User is redirected to their `/logs` and a message continaing "No attendance logs found." is rendered.
+- **Actual Result**: User is redirected to their `/logs` and a message continaing "No attendance logs found." is rendered.
+- **Status**: Passed
+
+---
+
+### **Test Case ID:** `TC19_Submit_Correct_Time_In_And_Out_Success`
+
+- **Title**: Submit Correct Time-In And Time-Out
+- **Description**: Intern logs their time-in and time-out times for the day.
+- **Preconditions**: Intern is logged in and in their dashboard.
+- **Test Steps**:
+  1. Enter `08:00` in the "Time IN (AM)" field.
+  2. Enter `12:00` in the "Time Out (AM)" field.
+  3. Enter `13:00` in the "Time IN (PM)" field.
+  4. Enter `17:00` in the "Time Out (PM)" field.
+  5. Click the "Submit" button.
+- **Expected Result**: User recieves a message through a snackbar saying "Total time rendered updated successfully!", "Time data submitted successfully!" and their data is logged in the database.
+- **Actual Result**: User recieves a message through a snackbar saying "Total time rendered updated successfully!", "Time data submitted successfully!" and their data is logged in the database.
+- **Status**: Passed
+
+---
+
+### **Test Case ID:** `TC20_Submit_Invalid_Time_In_And_Out_Failure`
+
+- **Title**: Submit Invalid Time-In And Time-Out
+- **Description**: Intern logs their time-in and time-out times for the day.
+- **Preconditions**: Intern is logged in and in their dashboard.
+- **Test Steps**:
+  1. Click the "Submit" button.
+- **Expected Result**: User recieves a message through a snackbar raising the error since no valid time data was submitted.
+- **Actual Result**: User recieves a message through a snackbar saying "Total time rendered updated successfully!", "Time data submitted successfully!" and their data is logged in the database.
+- **Status**: Failed
+
+---
+
+### **Test Case ID:** `TC21_Submit_Incorrect_Time_In_And_Out_Failure`
+
+- **Title**: Submit Incorrect Time-In And Time-Out
+- **Description**: Intern inputs incorrect times such as an earlier time-out time compared to their time-in time.
+- **Preconditions**: Intern is logged in and in their dashboard.
+- **Test Steps**:
+  1. Enter `09:00` in the "Time IN (AM)" field.
+  2. Enter `07:00` in the "Time Out (AM)" field.
+  3. Enter `13:00` in the "Time IN (PM)" field.
+  4. Enter `17:00` in the "Time Out (PM)" field.
+  5. Click the "Submit" button.
+- **Expected Result**: User recieves a message through a snackbar raising the error due to incorrect time data was submitted.
+- **Actual Result**: User recieves a message through a snackbar saying "Total time rendered updated successfully!", "Time data submitted successfully!" and their data is logged in the database.
+- **Status**: Failed
+
+---
+
+### **Test Case ID:** `TC22_Intern_Acessing_Admin_Dashboard_Success`
+
+- **Title**: Intern Tries Accessing Admin Dashboard
+- **Description**: Intern tries to access the admin dashboard
+- **Preconditions**: Intern is logged in.
+- **Test Steps**:
+  1. User changes the url from `/dashboard` to `/admin`.
+- **Expected Result**: User stays in their dashboard.
+- **Actual Result**: User stays in his dashboard.
+- **Status**: Passed
+
+---
+
+### **Test Case ID:** `TC23_Admin_Acessing_Logs_Failure`
+
+- **Title**: Admin Injects `/logs` In The Url
+- **Description**: Admin injects `/logs` in the url.
+- **Preconditions**: Admin is logged in.
+- **Test Steps**:
+  1. User changes the url from `/admin` to `/logs`.
+- **Expected Result**: User stays in their dashboard.
+- **Actual Result**: User is rendered an empty monthly logs table.
+- **Status**: Failed
+
+---
+
+### **Test Case ID:** `TC24_Acessing_Restricted_Routes_Failure`
+
+- **Title**: User Accesses Intern Dashboard Without Logging In
+- **Description**: A user tries to access the intern dashboard through url injection.
+- **Preconditions**: User is logged out.
+- **Test Steps**:
+  1. User injects the url with `/dashboard`.
+- **Expected Result**: User stays in the login page.
+- **Actual Result**: User is rendered an empty intern dashboard.
+- **Status**: Failed
+
+---
+
+### **Test Case ID:** `TC25_Acessing_Restricted_Routes_Failure`
+
+- **Title**: User Accesses Admin Dashboard Without Logging In
+- **Description**: A user tries to access the admin dashboard through url injection.
+- **Preconditions**: User is logged out.
+- **Test Steps**:
+  1. User injects the url with `/admin`.
+- **Expected Result**: User stays in the login page.
+- **Actual Result**: User is rendered an empty admin dashboard with a list of employees.
+- **Status**: Failed
+
+---
+
+### **Test Case ID:** `TC26_Acessing_Restricted_Routes_Failure`
+
+- **Title**: User Accesses Admin Dashboard Without Logging In
+- **Description**: A user tries to access an attendance logs table through url injection.
+- **Preconditions**: User is logged out.
+- **Test Steps**:
+  1. User injects the url with `/logs`.
+- **Expected Result**: User stays in the login page.
+- **Actual Result**: User is rendered an empty monthly logs table with a snackbar error saying "API error: Unexpected token 'A', "A token is"... is not valid JSON".
+- **Status**: Failed
+
+---
+
+### **Test Case ID:** `TC27_Acessing_Restricted_Routes_Failure`
+
+- **Title**: User Accesses Admin Dashboard Without Logging In
+- **Description**: A user tries to access an attendance logs table through url injection.
+- **Preconditions**: User is logged out.
+- **Test Steps**:
+  1. User changes the url from `/admin` to `/dashboard`.
+- **Expected Result**: User stays in their dashboard.
+- **Actual Result**: User is rendered an empty intern dashboard.
+- **Status**: Failed
+
+---
+
 
 ## **4. Conclusion**
-- **Test Summary**: Out of [Total Number] test cases, [Number Passed] passed, and [Number Failed] failed.
-- **Issues Found**: [List any bugs or issues discovered during testing].
-- **Recommendations**: [Any recommendations for further testing or areas for improvement].
+- **Test Summary**: Out of 27 test cases, 20 passed, and 7 failed.
+- **Issues Found**:
+  1. Intern can submit an empty field in their logs.
+  2. Intern can submit incorrect time values in their logs.
+  3. Admin can access an intern dashboard named after themselves.
+  4. Admin can access a logs table for themseleves.
+  5. A user not logged in can access an empty intern dashboard and logs table.
+- **Recommendations**:
+  1. Replace Time-In/Out feature with a button.
+  2. Fix and protect the routes a user can access and not access.
 
 ---
-
-This template provides a comprehensive structure for documenting your tests. Make sure to fill in the placeholders with details specific to your project.
-
