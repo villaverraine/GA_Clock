@@ -1,7 +1,3 @@
-Certainly! Here's a README file based on the instructions provided:
-
----
-
 # Clock0 Application
 
 ## Overview
@@ -72,7 +68,3 @@ To log in as an admin, use the following credentials:
 - **React App Setup**: Navigate to the main directory, install dependencies, and start the app.
 
 By following these steps, you should have both the server and the React application running concurrently.
-
----
-
-This README file provides clear and concise instructions for setting up and running the project. Feel free to adjust any details according to your project's specific needs.
